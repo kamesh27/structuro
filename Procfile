@@ -1,1 +1,1 @@
-web: gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 section_calculator:app 
+web: gunicorn --bind 0.0.0.0:8080 section_calculator:app
