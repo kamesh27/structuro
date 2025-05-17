@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sectional Properties Calculator</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type="text"], input[type="number"], select {
+            width: calc(100% - 22px); padding: 10px; margin-top: 5px; border: 1px solid #ddd;
+            border-radius: 4px; box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff; color: white; padding: 10px 15px; margin-top: 20px;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 16px;
+        }
+        button:hover { background-color: #0056b3; }
+        .hidden { display: none; }
+        #resultsArea, #errorArea { margin-top: 20px; padding: 10px; border-radius: 4px; }
+        #resultsArea { background-color: #e9f7ef; border: 1px solid #d1e7dd; }
+        #errorArea { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        .form-section { border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sectional Properties Calculator</h1>
+
+        <div class="form-section">
+            <h2>Global Settings</h2>
+            <label for="unitSystem">Unit System:</label>
+            <select id="unitSystem" name="unitSystem">
+                <option value="METRIC_MM_N" selected>Metric (N, mm)</option>
+                <option value="METRIC_M_KN">Metric (kN, m)</option>
+                <option value="IMPERIAL_IN_KIPS">Imperial (kips, inches)</option>
+                <!-- <option value="IMPERIAL_LB_FT">Imperial (lbs, ft)</option> -->
+            </select>
+        </div>
+
+        <div class="form-section">
+            <h2>Section Type</h2>
+            <select id="sectionType" name="sectionType">
+                <option value="">-- Select Section Type --</option>
+                <option value="StandardRolled">Standard Rolled Steel Section</option>
+                <option value="BuiltUp">Built-up Steel Section (Not Implemented)</option>
+                <option value="Composite">Composite Steel-Concrete Section (Not Implemented)</option>
+            </select>
+        </div>
+
+        <!-- Standard Rolled Section Inputs -->
+        <div id="standardRolledInputs" class="form-section hidden">
+            <h3>Standard Rolled Steel Section</h3>
+            <label for="standardInputMethod">Input Method:</label>
+            <select id="standardInputMethod" name="standardInputMethod">
+                <option value="Manual">Enter Dimensions Manually</option>
+                <option value="Library">Select from Library</option>
+            </select>
+
+            <div id="standardManualInputs" class="hidden">
+                <h4>Manual Dimensions</h4>
+                <label for="manualShapeType">Shape Type:</label>
+                <select id="manualShapeType" name="manualShapeType">
+                    <option value="">-- Select Shape --</option>
+                    <option value="SolidRectangle">Solid Rectangle</option>
+                    <option value="SolidCircle">Solid Circle</option>
+                    <option value="I-Beam">I-Beam</option>
+                    <option value="Channel">Channel</option>
+                    <option value="Angle">Angle</option>
+                    <option value="Tee">Tee</option>
+                    <option value="HSS-Rectangular">HSS-Rectangular</option>
+                    <option value="HSS-Circular">HSS-Circular</option>
+                </select>
+
+                <div id="manualDimsFields" class="hidden">
+                    <!-- Fields will be dynamically added here by JS -->
+                </div>
+            </div>
+
+            <div id="standardLibraryInputs" class="hidden">
+                <h4>Select from Library</h4>
+                <label for="libraryStandardCode">Standard/Code:</label>
+                <select id="libraryStandardCode" name="libraryStandardCode">
+                    <!-- Options populated by JS -->
+                </select>
+                <label for="libraryShapeType">Shape Type:</label>
+                <select id="libraryShapeType" name="libraryShapeType">
+                    <!-- Options populated by JS -->
+                </select>
+                <label for="librarySectionDesignation">Section Designation:</label>
+                <select id="librarySectionDesignation" name="librarySectionDesignation">
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+        </div>
+
+        <!-- BuiltUp Section Inputs (Placeholder) -->
+        <div id="builtUpInputs" class="form-section hidden">
+            <h3>Built-up Steel Section</h3>
+            <p>Input form for Built-up sections will be here. (Not yet implemented)</p>
+        </div>
+
+        <!-- Composite Section Inputs (Placeholder) -->
+        <div id="compositeInputs" class="form-section hidden">
+            <h3>Composite Steel-Concrete Section</h3>
+            <p>Input form for Composite sections will be here. (Not yet implemented)</p>
+        </div>
+
+        <button id="calculateButton">Calculate Properties</button>
+
+        <div id="errorArea" class="hidden"></div>
+        <div id="resultsArea" class="hidden">
+            <h2>Results</h2>
+            <table id="resultsTable">
+                <thead>
+                    <tr><th>Description</th><th>Symbol</th><th>Value</th><th>Unit</th></tr>
+                </thead>
+                <tbody>
+                    <!-- Results will be populated here -->
+                </tbody>
+            </table>
+            <button id="exportExcelButton" class="hidden" style="margin-top: 10px;">Export to Excel</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const unitSystemSelect = document.getElementById('unitSystem');
+        const sectionTypeSelect = document.getElementById('sectionType');
+        
+        const standardRolledInputsDiv = document.getElementById('standardRolledInputs');
+        const standardInputMethodSelect = document.getElementById('standardInputMethod');
+        const standardManualInputsDiv = document.getElementById('standardManualInputs');
+        const manualShapeTypeSelect = document.getElementById('manualShapeType');
+        const manualDimsFieldsDiv = document.getElementById('manualDimsFields');
+        const standardLibraryInputsDiv = document.getElementById('standardLibraryInputs');
+        // Library dropdowns
+        const libraryStandardCodeSelect = document.getElementById('libraryStandardCode');
+        const libraryShapeTypeSelect = document.getElementById('libraryShapeType');
+        const librarySectionDesignationSelect = document.getElementById('librarySectionDesignation');
+
+        const builtUpInputsDiv = document.getElementById('builtUpInputs');
+        const compositeInputsDiv = document.getElementById('compositeInputs');
+
+        const calculateButton = document.getElementById('calculateButton');
+        const errorAreaDiv = document.getElementById('errorArea');
+        const resultsAreaDiv = document.getElementById('resultsArea');
+        const resultsTableBody = document.querySelector('#resultsTable tbody');
+        const exportExcelButton = document.getElementById('exportExcelButton');
+
+        // --- Event Listeners ---
+        sectionTypeSelect.addEventListener('change', function() {
+            hideAllInputSections();
+            if (this.value === 'StandardRolled') {
+                standardRolledInputsDiv.classList.remove('hidden');
+                handleStandardInputMethodChange(); // Show manual or library based on current selection
+            } else if (this.value === 'BuiltUp') {
+                builtUpInputsDiv.classList.remove('hidden');
+            } else if (this.value === 'Composite') {
+                compositeInputsDiv.classList.remove('hidden');
+            }
+        });
+
+        standardInputMethodSelect.addEventListener('change', handleStandardInputMethodChange);
+        manualShapeTypeSelect.addEventListener('change', handleManualShapeTypeChange);
+        calculateButton.addEventListener('click', handleCalculate);
+        exportExcelButton.addEventListener('click', handleExportExcel);
+
+        // --- Helper Functions ---
+        function hideAllInputSections() {
+            standardRolledInputsDiv.classList.add('hidden');
+            builtUpInputsDiv.classList.add('hidden');
+            compositeInputsDiv.classList.add('hidden');
+        }
+
+        function handleStandardInputMethodChange() {
+            if (standardInputMethodSelect.value === 'Manual') {
+                standardManualInputsDiv.classList.remove('hidden');
+                standardLibraryInputsDiv.classList.add('hidden');
+                handleManualShapeTypeChange(); // Populate fields for current manual shape
+            } else if (standardInputMethodSelect.value === 'Library') {
+                standardManualInputsDiv.classList.add('hidden');
+                standardLibraryInputsDiv.classList.remove('hidden');
+                fetchLibraryData(); // Populate library dropdowns
+            } else {
+                standardManualInputsDiv.classList.add('hidden');
+                standardLibraryInputsDiv.classList.add('hidden');
+            }
+        }
+
+        function handleManualShapeTypeChange() {
+            manualDimsFieldsDiv.innerHTML = ''; // Clear previous fields
+            const shape = manualShapeTypeSelect.value;
+            if (!shape) {
+                manualDimsFieldsDiv.classList.add('hidden');
+                return;
+            }
+            manualDimsFieldsDiv.classList.remove('hidden');
+
+            let fields = [];
+            if (shape === 'SolidRectangle') {
+                fields = [
+                    { name: 'h', label: 'Height (h)', type: 'number' },
+                    { name: 'b', label: 'Width (b)', type: 'number' }
+                ];
+            } else if (shape === 'I-Beam') {
+                fields = [
+                    { name: 'd', label: 'Overall Depth (d)', type: 'number' },
+                    { name: 'bf', label: 'Flange Width (bf)', type: 'number' },
+                    { name: 'tf', label: 'Flange Thickness (tf)', type: 'number' },
+                    { name: 'tw', label: 'Web Thickness (tw)', type: 'number' }
+                ];
+            } else if (shape === 'SolidCircle') {
+                fields = [
+                    { name: 'D', label: 'Diameter (D)', type: 'number' }
+                ];
+            } else if (shape === 'Channel') {
+                fields = [
+                    { name: 'd', label: 'Overall Depth (d)', type: 'number' },
+                    { name: 'bf', label: 'Flange Width (bf)', type: 'number' },
+                    { name: 'tf', label: 'Flange Thickness (tf)', type: 'number' },
+                    { name: 'tw', label: 'Web Thickness (tw)', type: 'number' }
+                ];
+            } else if (shape === 'Angle') {
+                fields = [
+                    { name: 'L1', label: 'Leg 1 Length (L1)', type: 'number' },
+                    { name: 'L2', label: 'Leg 2 Length (L2)', type: 'number' },
+                    { name: 't', label: 'Thickness (t)', type: 'number' }
+                ];
+            } else if (shape === 'Tee') {
+                fields = [
+                    { name: 'd', label: 'Overall Depth (d)', type: 'number' },
+                    { name: 'bf', label: 'Flange Width (bf)', type: 'number' },
+                    { name: 'tf', label: 'Flange Thickness (tf)', type: 'number' },
+                    { name: 'ts', label: 'Stem Thickness (ts)', type: 'number' } // ts for stem thickness
+                ];
+            } else if (shape === 'HSS-Rectangular') {
+                fields = [
+                    { name: 'H', label: 'Overall Height (H)', type: 'number' },
+                    { name: 'B', label: 'Overall Width (B)', type: 'number' },
+                    { name: 't', label: 'Thickness (t)', type: 'number' }
+                ];
+            } else if (shape === 'HSS-Circular') {
+                fields = [
+                    { name: 'OD', label: 'Outer Diameter (OD)', type: 'number' },
+                    { name: 't', label: 'Thickness (t)', type: 'number' }
+                ];
+            }
+            // Add more shapes here
+
+            fields.forEach(field => {
+                const label = document.createElement('label');
+                label.htmlFor = `manual_${field.name}`;
+                label.textContent = field.label + ':';
+                
+                const input = document.createElement('input');
+                input.type = field.type;
+                input.id = `manual_${field.name}`;
+                input.name = `manual_${field.name}`;
+                input.required = true;
+
+                manualDimsFieldsDiv.appendChild(label);
+                manualDimsFieldsDiv.appendChild(input);
+                manualDimsFieldsDiv.appendChild(document.createElement('br'));
+            });
+        }
+        
+        let sectionLibraryCache = null;
+
+        async function fetchLibraryData() {
+            if (sectionLibraryCache) {
+                populateLibraryDropdowns(sectionLibraryCache);
+                return;
+            }
+            try {
+                const response = await fetch('/get_library_data');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const libraryData = await response.json();
+                sectionLibraryCache = libraryData;
+                populateLibraryDropdowns(libraryData);
+            } catch (error) {
+                showError('Failed to load section library: ' + error.message);
+                console.error('Fetch library error:', error);
+            }
+        }
+
+        function populateLibraryDropdowns(data) {
+            // Clear existing options
+            libraryStandardCodeSelect.innerHTML = '<option value="">-- Select Code --</option>';
+            libraryShapeTypeSelect.innerHTML = '<option value="">-- Select Shape Type --</option>';
+            librarySectionDesignationSelect.innerHTML = '<option value="">-- Select Designation --</option>';
+
+            const codes = Object.keys(data);
+            codes.forEach(code => {
+                const option = document.createElement('option');
+                option.value = code;
+                option.textContent = code;
+                libraryStandardCodeSelect.appendChild(option);
+            });
+
+            libraryStandardCodeSelect.onchange = () => {
+                libraryShapeTypeSelect.innerHTML = '<option value="">-- Select Shape Type --</option>';
+                librarySectionDesignationSelect.innerHTML = '<option value="">-- Select Designation --</option>';
+                const selectedCode = libraryStandardCodeSelect.value;
+                if (selectedCode && data[selectedCode]) {
+                    const shapeTypes = Object.keys(data[selectedCode]);
+                    shapeTypes.forEach(shapeType => {
+                        const option = document.createElement('option');
+                        option.value = shapeType;
+                        option.textContent = shapeType;
+                        libraryShapeTypeSelect.appendChild(option);
+                    });
+                }
+            };
+
+            libraryShapeTypeSelect.onchange = () => {
+                librarySectionDesignationSelect.innerHTML = '<option value="">-- Select Designation --</option>';
+                const selectedCode = libraryStandardCodeSelect.value;
+                const selectedShapeType = libraryShapeTypeSelect.value;
+                if (selectedCode && selectedShapeType && data[selectedCode][selectedShapeType]) {
+                    const designations = data[selectedCode][selectedShapeType];
+                    designations.forEach(section => {
+                        const option = document.createElement('option');
+                        option.value = section.designation;
+                        option.textContent = section.designation;
+                        librarySectionDesignationSelect.appendChild(option);
+                    });
+                }
+            };
+        }
+
+
+        async function handleCalculate() {
+            errorAreaDiv.classList.add('hidden');
+            errorAreaDiv.textContent = '';
+            resultsTableBody.innerHTML = '';
+            resultsAreaDiv.classList.add('hidden');
+
+            const payload = {
+                unit_system: unitSystemSelect.value,
+                section_type: sectionTypeSelect.value,
+                inputs: {}
+            };
+
+            if (payload.section_type === 'StandardRolled') {
+                payload.inputs.method = standardInputMethodSelect.value;
+                if (payload.inputs.method === 'Manual') {
+                    payload.inputs.shape_type = manualShapeTypeSelect.value;
+                    if (!payload.inputs.shape_type) {
+                        showError("Please select a shape type for manual input.");
+                        return;
+                    }
+                    payload.inputs.dimensions = {};
+                    const fieldsDiv = document.getElementById('manualDimsFields');
+                    const inputs = fieldsDiv.querySelectorAll('input');
+                    for (const input of inputs) {
+                        if (!input.value) {
+                            showError(`Please enter a value for ${input.previousSibling.textContent}`);
+                            return;
+                        }
+                        // Assuming all manual dims are 'length' for now, this might need refinement
+                        payload.inputs.dimensions[input.id.replace('manual_', '')] = [parseFloat(input.value), "length"];
+                    }
+                } else if (payload.inputs.method === 'Library') {
+                    payload.inputs.standard_code = libraryStandardCodeSelect.value;
+                    payload.inputs.shape_type = libraryShapeTypeSelect.value;
+                    payload.inputs.designation = librarySectionDesignationSelect.value;
+                    if (!payload.inputs.standard_code || !payload.inputs.shape_type || !payload.inputs.designation) {
+                        showError("Please make all selections for library section.");
+                        return;
+                    }
+                }
+            } else if (payload.section_type === 'BuiltUp' || payload.section_type === 'Composite') {
+                showError(`${payload.section_type} sections are not yet implemented.`);
+                return;
+            } else {
+                showError("Please select a section type.");
+                return;
+            }
+            
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResults(data.results);
+                } else {
+                    showError(data.error || 'An unknown error occurred.');
+                }
+            } catch (error) {
+                showError('Calculation request failed: ' + error.message);
+                console.error('Calculate error:', error);
+            }
+        }
+
+        function displayResults(results) {
+            if (!results) {
+                showError("No results returned from calculation.");
+                return;
+            }
+            resultsTableBody.innerHTML = ''; // Clear previous results
+            // The 'results' object is now a dictionary where keys are property symbols,
+            // and values are objects like {name: "Full Name", symbol: "Sym", value: 123, unit: "mm"}
+            for (const symbolKey in results) { // Iterate using the symbol key
+                const resultEntry = results[symbolKey];
+                const row = resultsTableBody.insertRow();
+                
+                const cellDescription = row.insertCell();
+                const cellSymbol = row.insertCell();
+                const cellValue = row.insertCell();
+                const cellUnit = row.insertCell();
+
+                cellDescription.textContent = resultEntry.name;
+                cellSymbol.textContent = resultEntry.symbol; // Which is same as symbolKey
+                
+                if (resultEntry && typeof resultEntry.value === 'number') {
+                    cellValue.textContent = resultEntry.value.toFixed(4);
+                } else {
+                    cellValue.textContent = (resultEntry && resultEntry.value !== null) ? resultEntry.value : "N/A";
+                }
+                cellUnit.textContent = (resultEntry && resultEntry.unit) ? resultEntry.unit : "";
+            }
+            resultsAreaDiv.classList.remove('hidden');
+            exportExcelButton.classList.remove('hidden'); // Show export button
+        }
+        
+        // The getUnitSymbolForKey function is no longer needed as units come from backend.
+        // It can be removed or commented out. For now, let's comment it out.
+        /* 
+        function getUnitSymbolForKey(key, currentUnitSystem) {
+            const displayUnitsMap = {
+                "METRIC_MM_N": { "length": "mm", "area": "mm²", "moment_of_inertia": "mm⁴", "section_modulus": "mm³", "angle": "deg", "warping_constant": "mm⁶", "torsional_constant": "mm⁴"},
+                "METRIC_M_KN": { "length": "m", "area": "m²", "moment_of_inertia": "m⁴", "section_modulus": "m³", "angle": "deg", "warping_constant": "m⁶", "torsional_constant": "m⁴"},
+                "IMPERIAL_IN_KIPS": { "length": "in", "area": "in²", "moment_of_inertia": "in⁴", "section_modulus": "in³", "angle": "deg", "warping_constant": "in⁶", "torsional_constant": "in⁴"}
+            };
+            const units = displayUnitsMap[currentUnitSystem];
+            if (!units) return "";
+
+            if (key.startsWith("I") && key !== "Ixy" || key === "J") return units.moment_of_inertia;
+            if (key.startsWith("S") || key.startsWith("Z")) return units.section_modulus;
+            if (key.startsWith("r") || key.includes("c") || key.includes("top") || key.includes("bottom") || key.includes("left") || key.includes("right")) return units.length;
+            if (key === "A" || key.includes("_tr")) return units.area;
+            if (key === "theta_p") return units.angle;
+            if (key === "Cw") return units.warping_constant;
+            return "";
+        }
+        */
+
+        function showError(message) {
+            errorAreaDiv.textContent = message;
+            errorAreaDiv.classList.remove('hidden');
+        }
+
+        async function handleExportExcel() {
+            // We need to send the current inputs to the backend to regenerate the data for export,
+            // or, if results are simple enough, send the current results data.
+            // Sending inputs is more robust as backend can ensure consistency.
+            const payload = getCurrentInputPayload(); // Reuse or create a function to get current inputs
+            if (!payload) {
+                showError("No data to export. Please calculate properties first.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/export_excel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = "section_properties.xlsx"; // Filename for download
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(downloadUrl);
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.error || 'Failed to export Excel file.');
+                }
+            } catch (error) {
+                showError('Excel export request failed: ' + error.message);
+                console.error('Export Excel error:', error);
+            }
+        }
+
+        function getCurrentInputPayload() {
+            // This function would be similar to the data gathering part of handleCalculate
+            // It should return the same payload structure that /calculate expects.
+            // For brevity, this is a simplified version. A refactor would be good.
+            const sectionType = sectionTypeSelect.value;
+            if (!sectionType) return null;
+
+            const payload = {
+                unit_system: unitSystemSelect.value,
+                section_type: sectionType,
+                inputs: {}
+            };
+             if (payload.section_type === 'StandardRolled') {
+                payload.inputs.method = standardInputMethodSelect.value;
+                if (payload.inputs.method === 'Manual') {
+                    payload.inputs.shape_type = manualShapeTypeSelect.value;
+                    if (!payload.inputs.shape_type) return null;
+                    payload.inputs.dimensions = {};
+                    const fieldsDiv = document.getElementById('manualDimsFields');
+                    const inputs = fieldsDiv.querySelectorAll('input');
+                    for (const input of inputs) {
+                        if (!input.value) return null; // Incomplete data
+                        payload.inputs.dimensions[input.id.replace('manual_', '')] = [parseFloat(input.value), "length"];
+                    }
+                } else if (payload.inputs.method === 'Library') {
+                    payload.inputs.standard_code = libraryStandardCodeSelect.value;
+                    payload.inputs.shape_type = libraryShapeTypeSelect.value;
+                    payload.inputs.designation = librarySectionDesignationSelect.value;
+                    if (!payload.inputs.standard_code || !payload.inputs.shape_type || !payload.inputs.designation) return null;
+                }
+            } else { // BuiltUp, Composite not implemented for export yet
+                return null;
+            }
+            return payload;
+        }
+
+        // Initial setup
+        hideAllInputSections();
+        handleStandardInputMethodChange(); // Initialize based on default standard input method
+
+    </script>
+</body>
+</html>

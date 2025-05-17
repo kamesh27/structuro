@@ -1,0 +1,335 @@
+{
+  "GENERIC_METRIC": {
+    "I-Beam": [
+      {
+        "designation": "GI300x150x7x10",
+        "dimensions_display": {
+          "d": 300,
+          "bf": 150,
+          "tf": 10,
+          "tw": 7,
+          "unit_system_of_dims": "METRIC_MM_N"
+        },
+        "A_base": 6900.0,
+        "d_base": 300.0,
+        "bf_base": 150.0,
+        "tf_base": 10.0,
+        "tw_base": 7.0,
+        "hw_base": 280.0,
+        "Ixx_base": 98456666.66666667,
+        "Iyy_base": 6576166.666666667,
+        "Ixy_base": 0,
+        "J_base": 250366.66666666666,
+        "Cw_base": 142752083333.33334,
+        "Zx_base": 572200.0,
+        "Zy_base": 115930.0
+      }
+    ],
+    "SolidRectangle": [
+      {
+        "designation": "GR200x100",
+        "dimensions_display": {
+          "h": 200,
+          "b": 100,
+          "unit_system_of_dims": "METRIC_MM_N"
+        },
+        "A_base": 20000.0,
+        "h_base": 200.0,
+        "b_base": 100.0,
+        "Ixx_base": 66666666.66666667,
+        "Iyy_base": 16666666.666666668,
+        "Ixy_base": 0,
+        "J_base": 45775000.0
+      }
+    ]
+  },
+  "AISC": {
+    "W-shape": [
+      {
+        "designation": "W14x90",
+        "dimensions_display": {
+          "d": 14.0,
+          "bf": 14.5,
+          "tf": 0.71,
+          "tw": 0.44,
+          "unit_system_of_dims": "IMPERIAL_IN_KIPS"
+        },
+        "A_base": 16129.0,
+        "d_base": 355.6,
+        "bf_base": 368.3,
+        "tf_base": 18.034,
+        "tw_base": 11.176,
+        "Ixx_base": 390428800.0,
+        "Iyy_base": 140280000.0,
+        "Ixy_base": 0,
+        "J_base": 2206400.0,
+        "Cw_base": 2040000000000.0
+      }
+    ]
+  },
+  "INDIAN_SP6": {
+    "I-Beam": [
+      {
+        "designation": "ISMB100", "dimensions_display": {"d": 100.0, "bf": 75.0, "tf": 7.2, "tw": 4.0, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 1460.0, "d_base": 100.0, "bf_base": 75.0, "tf_base": 7.2, "tw_base": 4.0,
+        "Ixx_base": 2575000.0, "Iyy_base": 408000.0, "Ixy_base": 0,
+        "Zx_base": 41680.0, "Zy_base": 8420.0, "J_base": 20488.53, "Cw_base": 878407680.0
+      },
+      {
+        "designation": "ISMB125", "dimensions_display": {"d": 125.0, "bf": 75.0, "tf": 7.6, "tw": 4.4, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 1660.0, "d_base": 125.0, "bf_base": 75.0, "tf_base": 7.6, "tw_base": 4.4,
+        "Ixx_base": 4490000.0, "Iyy_base": 437000.0, "Ixy_base": 0,
+        "Zx_base": 81850.0, "Zy_base": 18280.0, "J_base": 24805.89, "Cw_base": 1242038800.0
+      },
+      {
+        "designation": "ISMB150", "dimensions_display": {"d": 150.0, "bf": 80.0, "tf": 7.6, "tw": 4.8, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 1900.0, "d_base": 150.0, "bf_base": 80.0, "tf_base": 7.6, "tw_base": 4.8,
+        "Ixx_base": 7264000.0, "Iyy_base": 526000.0, "Ixy_base": 0,
+        "Zx_base": 110480.0, "Zy_base": 20780.0, "J_base": 30338.13, "Cw_base": 1918982400.0
+      },
+      {
+        "designation": "ISMB175", "dimensions_display": {"d": 175.0, "bf": 90.0, "tf": 8.6, "tw": 5.5, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 2462.0, "d_base": 175.0, "bf_base": 90.0, "tf_base": 8.6, "tw_base": 5.5,
+        "Ixx_base": 12720000.0, "Iyy_base": 850000.0, "Ixy_base": 0,
+        "Zx_base": 166080.0, "Zy_base": 30150.0, "J_base": 46958.08, "Cw_base": 3567187500.0
+      },
+      {
+        "designation": "ISMB200", "dimensions_display": {"d": 200.0, "bf": 100.0, "tf": 10.8, "tw": 5.7, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 3230.0, "d_base": 200.0, "bf_base": 100.0, "tf_base": 10.8, "tw_base": 5.7,
+        "Ixx_base": 22354000.0, "Iyy_base": 1500000.0, "Ixy_base": 0,
+        "Zx_base": 253860.0, "Zy_base": 45650.0, "J_base": 80426.87, "Cw_base": 6046125000.0
+      },
+      {
+        "designation": "ISMB225", "dimensions_display": {"d": 225.0, "bf": 110.0, "tf": 11.8, "tw": 6.5, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 3972.0, "d_base": 225.0, "bf_base": 110.0, "tf_base": 11.8, "tw_base": 6.5,
+        "Ixx_base": 34418000.0, "Iyy_base": 2183000.0, "Ixy_base": 0,
+        "Zx_base": 348270.0, "Zy_base": 65210.0, "J_base": 110990.08, "Cw_base": 9801969250.0
+      },
+      {
+        "designation": "ISMB250", "dimensions_display": {"d": 250.0, "bf": 125.0, "tf": 12.5, "tw": 6.9, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 4755.0, "d_base": 250.0, "bf_base": 125.0, "tf_base": 12.5, "tw_base": 6.9,
+        "Ixx_base": 51316000.0, "Iyy_base": 3345000.0, "Ixy_base": 0,
+        "Zx_base": 465710.0, "Zy_base": 88940.0, "J_base": 146101.08, "Cw_base": 18630046875.0
+      },
+      {
+        "designation": "ISMB300", "dimensions_display": {"d": 300.0, "bf": 140.0, "tf": 12.4, "tw": 7.5, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 5626.0, "d_base": 300.0, "bf_base": 140.0, "tf_base": 12.4, "tw_base": 7.5,
+        "Ixx_base": 86036000.0, "Iyy_base": 4539000.0, "Ixy_base": 0,
+        "Zx_base": 651740.0, "Zy_base": 116670.0, "J_base": 176528.0, "Cw_base": 30938828250.0
+      },
+      {
+        "designation": "ISMB350", "dimensions_display": {"d": 350.0, "bf": 140.0, "tf": 14.2, "tw": 8.1, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 6671.0, "d_base": 350.0, "bf_base": 140.0, "tf_base": 14.2, "tw_base": 8.1,
+        "Ixx_base": 136303000.0, "Iyy_base": 5377000.0, "Ixy_base": 0,
+        "Zx_base": 889570.0, "Zy_base": 127890.0, "J_base": 230460.47, "Cw_base": 48007005250.0
+      },
+      {
+        "designation": "ISMB400", "dimensions_display": {"d": 400.0, "bf": 140.0, "tf": 16.0, "tw": 8.9, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 7846.0, "d_base": 400.0, "bf_base": 140.0, "tf_base": 16.0, "tw_base": 8.9,
+        "Ixx_base": 204584000.0, "Iyy_base": 6221000.0, "Ixy_base": 0,
+        "Zx_base": 1176180.0, "Zy_base": 148210.0, "J_base": 296100.07, "Cw_base": 71000896000.0
+      },
+      {
+        "designation": "ISMB450", "dimensions_display": {"d": 450.0, "bf": 150.0, "tf": 17.4, "tw": 9.4, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 9227.0, "d_base": 450.0, "bf_base": 150.0, "tf_base": 17.4, "tw_base": 9.4,
+        "Ixx_base": 303908000.0, "Iyy_base": 8340000.0, "Ixy_base": 0,
+        "Zx_base": 1533360.0, "Zy_base": 185170.0, "J_base": 380348.8, "Cw_base": 110450010000.0
+      },
+      {
+        "designation": "ISMB500", "dimensions_display": {"d": 500.0, "bf": 180.0, "tf": 17.2, "tw": 10.2, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 11074.0, "d_base": 500.0, "bf_base": 180.0, "tf_base": 17.2, "tw_base": 10.2,
+        "Ixx_base": 452183000.0, "Iyy_base": 13698000.0, "Ixy_base": 0,
+        "Zx_base": 2074670.0, "Zy_base": 258290.0, "J_base": 450421.33, "Cw_base": 200185630500.0
+      },
+      {
+        "designation": "ISMB550", "dimensions_display": {"d": 550.0, "bf": 190.0, "tf": 19.3, "tw": 11.2, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 13211.0, "d_base": 550.0, "bf_base": 190.0, "tf_base": 19.3, "tw_base": 11.2,
+        "Ixx_base": 648936000.0, "Iyy_base": 18338000.0, "Ixy_base": 0,
+        "Zx_base": 2711980.0, "Zy_base": 324140.0, "J_base": 593287.89, "Cw_base": 303490007500.0
+      },
+      {
+        "designation": "ISMB600", "dimensions_display": {"d": 600.0, "bf": 210.0, "tf": 20.8, "tw": 12.0, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 15621.0, "d_base": 600.0, "bf_base": 210.0, "tf_base": 20.8, "tw_base": 12.0,
+        "Ixx_base": 918130000.0, "Iyy_base": 26510000.0, "Ixy_base": 0,
+        "Zx_base": 3510630.0, "Zy_base": 413410.0, "J_base": 720234.67, "Cw_base": 474234010000.0
+      }
+    ],
+    "Channel": [
+      {
+        "designation": "ISMC75", "dimensions_display": {"d": 75.0, "bf": 40.0, "tf": 7.3, "tw": 4.4, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 867.0, "d_base": 75.0, "bf_base": 40.0, "tf_base": 7.3, "tw_base": 4.4,
+        "Ixx_base": 760000.0, "Iyy_base": 126000.0, "Ixy_base": 0,
+        "Zx_base": 24170.0, "Zy_base": 7850.0, "J_base": 12088.99, "Cw_base": null
+      },
+      {
+        "designation": "ISMC100", "dimensions_display": {"d": 100.0, "bf": 50.0, "tf": 7.5, "tw": 4.7, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 1170.0, "d_base": 100.0, "bf_base": 50.0, "tf_base": 7.5, "tw_base": 4.7,
+        "Ixx_base": 1867000.0, "Iyy_base": 259000.0, "Ixy_base": 0,
+        "Zx_base": 43830.0, "Zy_base": 12950.0, "J_base": 18376.57, "Cw_base": null
+      },
+      {
+        "designation": "ISMC125", "dimensions_display": {"d": 125.0, "bf": 65.0, "tf": 8.1, "tw": 5.0, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 1619.0, "d_base": 125.0, "bf_base": 65.0, "tf_base": 8.1, "tw_base": 5.0,
+        "Ixx_base": 4164000.0, "Iyy_base": 599000.0, "Ixy_base": 0,
+        "Zx_base": 77150.0, "Zy_base": 22750.0, "J_base": 28605.83, "Cw_base": null
+      },
+      {
+        "designation": "ISMC150", "dimensions_display": {"d": 150.0, "bf": 75.0, "tf": 9.0, "tw": 5.4, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 2088.0, "d_base": 150.0, "bf_base": 75.0, "tf_base": 9.0, "tw_base": 5.4,
+        "Ixx_base": 7794000.0, "Iyy_base": 1023000.0, "Ixy_base": 0,
+        "Zx_base": 119820.0, "Zy_base": 34250.0, "J_base": 42019.2, "Cw_base": null
+      },
+      {
+        "designation": "ISMC175", "dimensions_display": {"d": 175.0, "bf": 75.0, "tf": 10.2, "tw": 5.7, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 2438.0, "d_base": 175.0, "bf_base": 75.0, "tf_base": 10.2, "tw_base": 5.7,
+        "Ixx_base": 12233000.0, "Iyy_base": 1210000.0, "Ixy_base": 0,
+        "Zx_base": 161650.0, "Zy_base": 40180.0, "J_base": 56040.39, "Cw_base": null
+      },
+      {
+        "designation": "ISMC200", "dimensions_display": {"d": 200.0, "bf": 75.0, "tf": 11.4, "tw": 6.1, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 2821.0, "d_base": 200.0, "bf_base": 75.0, "tf_base": 11.4, "tw_base": 6.1,
+        "Ixx_base": 18193000.0, "Iyy_base": 1404000.0, "Ixy_base": 0,
+        "Zx_base": 211250.0, "Zy_base": 47250.0, "J_base": 72904.61, "Cw_base": null
+      },
+      {
+        "designation": "ISMC225", "dimensions_display": {"d": 225.0, "bf": 80.0, "tf": 12.4, "tw": 6.4, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 3301.0, "d_base": 225.0, "bf_base": 80.0, "tf_base": 12.4, "tw_base": 6.4,
+        "Ixx_base": 26946000.0, "Iyy_base": 1872000.0, "Ixy_base": 0,
+        "Zx_base": 277930.0, "Zy_base": 58510.0, "J_base": 93009.71, "Cw_base": null
+      },
+      {
+        "designation": "ISMC250", "dimensions_display": {"d": 250.0, "bf": 80.0, "tf": 14.1, "tw": 7.1, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 3867.0, "d_base": 250.0, "bf_base": 80.0, "tf_base": 14.1, "tw_base": 7.1,
+        "Ixx_base": 38168000.0, "Iyy_base": 2191000.0, "Ixy_base": 0,
+        "Zx_base": 356720.0, "Zy_base": 69130.0, "J_base": 124869.65, "Cw_base": null
+      },
+      {
+        "designation": "ISMC300", "dimensions_display": {"d": 300.0, "bf": 90.0, "tf": 13.6, "tw": 7.6, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 4564.0, "d_base": 300.0, "bf_base": 90.0, "tf_base": 13.6, "tw_base": 7.6,
+        "Ixx_base": 63626000.0, "Iyy_base": 3108000.0, "Ixy_base": 0,
+        "Zx_base": 496770.0, "Zy_base": 87160.0, "J_base": 150349.12, "Cw_base": null
+      },
+      {
+        "designation": "ISMC350", "dimensions_display": {"d": 350.0, "bf": 100.0, "tf": 13.5, "tw": 8.1, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 5366.0, "d_base": 350.0, "bf_base": 100.0, "tf_base": 13.5, "tw_base": 8.1,
+        "Ixx_base": 100080000.0, "Iyy_base": 4306000.0, "Ixy_base": 0,
+        "Zx_base": 571900.0, "Zy_base": 109820.0, "J_base": 176883.45, "Cw_base": null 
+      },
+      {
+        "designation": "ISMC400", "dimensions_display": {"d": 400.0, "bf": 100.0, "tf": 15.3, "tw": 8.6, "unit_system_of_dims": "METRIC_MM_N"},
+        "A_base": 6293.0, "d_base": 400.0, "bf_base": 100.0, "tf_base": 15.3, "tw_base": 8.6,
+        "Ixx_base": 150828000.0, "Iyy_base": 5048000.0, "Ixy_base": 0,
+        "Zx_base": 891030.0, "Zy_base": 131950.0, "J_base": 222060.05, "Cw_base": null
+      }
+    ],
+    "Angle": [
+      {"designation": "ISA 50x50x6", "dimensions_display": {"L1": 50.0, "L2": 50.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 570.0, "L1_base": 50.0, "L2_base": 50.0, "t_base": 6.0, "Ixx_base": 129000.0, "Iyy_base": 129000.0, "Ixy_base": 76000.0, "Zx_base": null, "Zy_base": null, "J_base": 6768.0, "Cw_base": null},
+      {"designation": "ISA 65x65x8", "dimensions_display": {"L1": 65.0, "L2": 65.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 980.0, "L1_base": 65.0, "L2_base": 65.0, "t_base": 8.0, "Ixx_base": 374000.0, "Iyy_base": 374000.0, "Ixy_base": 220000.0, "Zx_base": null, "Zy_base": null, "J_base": 15029.33, "Cw_base": null},
+      {"designation": "ISA 75x75x10", "dimensions_display": {"L1": 75.0, "L2": 75.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1400.0, "L1_base": 75.0, "L2_base": 75.0, "t_base": 10.0, "Ixx_base": 714000.0, "Iyy_base": 714000.0, "Ixy_base": 417000.0, "Zx_base": null, "Zy_base": null, "J_base": 28333.33, "Cw_base": null},
+      {"designation": "ISA 75x75x6", "dimensions_display": {"L1": 75.0, "L2": 75.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 870.0, "L1_base": 75.0, "L2_base": 75.0, "t_base": 6.0, "Ixx_base": 457000.0, "Iyy_base": 457000.0, "Ixy_base": 270000.0, "Zx_base": null, "Zy_base": null, "J_base": 10044.0, "Cw_base": null},
+      {"designation": "ISA 75x75x8", "dimensions_display": {"L1": 75.0, "L2": 75.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1140.0, "L1_base": 75.0, "L2_base": 75.0, "t_base": 8.0, "Ixx_base": 590000.0, "Iyy_base": 590000.0, "Ixy_base": 348000.0, "Zx_base": null, "Zy_base": null, "J_base": 17493.33, "Cw_base": null},
+      {"designation": "ISA 80x80x10", "dimensions_display": {"L1": 80.0, "L2": 80.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1510.0, "L1_base": 80.0, "L2_base": 80.0, "t_base": 10.0, "Ixx_base": 877000.0, "Iyy_base": 877000.0, "Ixy_base": 514000.0, "Zx_base": null, "Zy_base": null, "J_base": 33333.33, "Cw_base": null},
+      {"designation": "ISA 80x80x8", "dimensions_display": {"L1": 80.0, "L2": 80.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1220.0, "L1_base": 80.0, "L2_base": 80.0, "t_base": 8.0, "Ixx_base": 725000.0, "Iyy_base": 725000.0, "Ixy_base": 427000.0, "Zx_base": null, "Zy_base": null, "J_base": 21013.33, "Cw_base": null},
+      {"designation": "ISA 90x90x8", "dimensions_display": {"L1": 90.0, "L2": 90.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1380.0, "L1_base": 90.0, "L2_base": 90.0, "t_base": 8.0, "Ixx_base": 1042000.0, "Iyy_base": 1042000.0, "Ixy_base": 615000.0, "Zx_base": null, "Zy_base": null, "J_base": 28245.33, "Cw_base": null},
+      {"designation": "ISA 90x90x10", "dimensions_display": {"L1": 90.0, "L2": 90.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1700.0, "L1_base": 90.0, "L2_base": 90.0, "t_base": 10.0, "Ixx_base": 1267000.0, "Iyy_base": 1267000.0, "Ixy_base": 745000.0, "Zx_base": null, "Zy_base": null, "J_base": 43333.33, "Cw_base": null},
+      {"designation": "ISA100x100x10", "dimensions_display": {"L1": 100.0, "L2": 100.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1900.0, "L1_base": 100.0, "L2_base": 100.0, "t_base": 10.0, "Ixx_base": 1770000.0, "Iyy_base": 1770000.0, "Ixy_base": 1044000.0, "Zx_base": null, "Zy_base": null, "J_base": 56666.67, "Cw_base": null},
+      {"designation": "ISA100x100x12", "dimensions_display": {"L1": 100.0, "L2": 100.0, "t": 12.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2260.0, "L1_base": 100.0, "L2_base": 100.0, "t_base": 12.0, "Ixx_base": 2070000.0, "Iyy_base": 2070000.0, "Ixy_base": 1216000.0, "Zx_base": null, "Zy_base": null, "J_base": 78336.0, "Cw_base": null},
+      {"designation": "ISA100x100x8", "dimensions_display": {"L1": 100.0, "L2": 100.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1540.0, "L1_base": 100.0, "L2_base": 100.0, "t_base": 8.0, "Ixx_base": 1451000.0, "Iyy_base": 1451000.0, "Ixy_base": 858000.0, "Zx_base": null, "Zy_base": null, "J_base": 37546.67, "Cw_base": null},
+      {"designation": "ISA110x110x10", "dimensions_display": {"L1": 110.0, "L2": 110.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2110.0, "L1_base": 110.0, "L2_base": 110.0, "t_base": 10.0, "Ixx_base": 2384000.0, "Iyy_base": 2384000.0, "Ixy_base": 1406000.0, "Zx_base": null, "Zy_base": null, "J_base": 70000.0, "Cw_base": null},
+      {"designation": "ISA130x130x10", "dimensions_display": {"L1": 130.0, "L2": 130.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2510.0, "L1_base": 130.0, "L2_base": 130.0, "t_base": 10.0, "Ixx_base": 4027000.0, "Iyy_base": 4027000.0, "Ixy_base": 2383000.0, "Zx_base": null, "Zy_base": null, "J_base": 100000.0, "Cw_base": null},
+      {"designation": "ISA130x130x12", "dimensions_display": {"L1": 130.0, "L2": 130.0, "t": 12.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2980.0, "L1_base": 130.0, "L2_base": 130.0, "t_base": 12.0, "Ixx_base": 4738000.0, "Iyy_base": 4738000.0, "Ixy_base": 2799000.0, "Zx_base": null, "Zy_base": null, "J_base": 139968.0, "Cw_base": null},
+      {"designation": "ISA150x150x15", "dimensions_display": {"L1": 150.0, "L2": 150.0, "t": 15.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 4280.0, "L1_base": 150.0, "L2_base": 150.0, "t_base": 15.0, "Ixx_base": 8968000.0, "Iyy_base": 8968000.0, "Ixy_base": 5291000.0, "Zx_base": null, "Zy_base": null, "J_base": 210937.5, "Cw_base": null}
+    ],
+    "HSS-Circular": [
+      {"designation": "15 NB (L)", "dimensions_display": {"OD": 21.3, "t": 2.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 121.0, "OD_base": 21.3, "t_base": 2.0, "Ixx_base": 5700.0, "Iyy_base": 5700.0, "Ixy_base": 0, "Zx_base": 747.65, "Zy_base": 747.65, "J_base": 11428.36, "Cw_base": 0},
+      {"designation": "15 NB (M)", "dimensions_display": {"OD": 21.3, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 153.0, "OD_base": 21.3, "t_base": 2.6, "Ixx_base": 6900.0, "Iyy_base": 6900.0, "Ixy_base": 0, "Zx_base": 864.29, "Zy_base": 864.29, "J_base": 13706.13, "Cw_base": 0},
+      {"designation": "15 NB (H)", "dimensions_display": {"OD": 21.3, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 182.0, "OD_base": 21.3, "t_base": 3.2, "Ixx_base": 7500.0, "Iyy_base": 7500.0, "Ixy_base": 0, "Zx_base": 930.65, "Zy_base": 930.65, "J_base": 15058.19, "Cw_base": 0},
+      {"designation": "20 NB (L)", "dimensions_display": {"OD": 26.9, "t": 2.3, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 178.0, "OD_base": 26.9, "t_base": 2.3, "Ixx_base": 13600.0, "Iyy_base": 13600.0, "Ixy_base": 0, "Zx_base": 1404.29, "Zy_base": 1404.29, "J_base": 27101.56, "Cw_base": 0},
+      {"designation": "20 NB (M)", "dimensions_display": {"OD": 26.9, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 198.0, "OD_base": 26.9, "t_base": 2.6, "Ixx_base": 14800.0, "Iyy_base": 14800.0, "Ixy_base": 0, "Zx_base": 1508.76, "Zy_base": 1508.76, "J_base": 29498.13, "Cw_base": 0},
+      {"designation": "20 NB (H)", "dimensions_display": {"OD": 26.9, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 238.0, "OD_base": 26.9, "t_base": 3.2, "Ixx_base": 17000.0, "Iyy_base": 17000.0, "Ixy_base": 0, "Zx_base": 1693.91, "Zy_base": 1693.91, "J_base": 33848.36, "Cw_base": 0},
+      {"designation": "25 NB (L)", "dimensions_display": {"OD": 33.7, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 254.0, "OD_base": 33.7, "t_base": 2.6, "Ixx_base": 30900.0, "Iyy_base": 30900.0, "Ixy_base": 0, "Zx_base": 2429.96, "Zy_base": 2429.96, "J_base": 61581.91, "Cw_base": 0},
+      {"designation": "25 NB (M)", "dimensions_display": {"OD": 33.7, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 306.0, "OD_base": 33.7, "t_base": 3.2, "Ixx_base": 36100.0, "Iyy_base": 36100.0, "Ixy_base": 0, "Zx_base": 2774.91, "Zy_base": 2774.91, "J_base": 71894.56, "Cw_base": 0},
+      {"designation": "25 NB (H)", "dimensions_display": {"OD": 33.7, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 373.0, "OD_base": 33.7, "t_base": 4.0, "Ixx_base": 41900.0, "Iyy_base": 41900.0, "Ixy_base": 0, "Zx_base": 3129.99, "Zy_base": 3129.99, "J_base": 83319.74, "Cw_base": 0},
+      {"designation": "32 NB (L)", "dimensions_display": {"OD": 42.4, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 325.0, "OD_base": 42.4, "t_base": 2.6, "Ixx_base": 64700.0, "Iyy_base": 64700.0, "Ixy_base": 0, "Zx_base": 3917.89, "Zy_base": 3917.89, "J_base": 128898.18, "Cw_base": 0},
+      {"designation": "32 NB (M)", "dimensions_display": {"OD": 42.4, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 394.0, "OD_base": 42.4, "t_base": 3.2, "Ixx_base": 76200.0, "Iyy_base": 76200.0, "Ixy_base": 0, "Zx_base": 4518.83, "Zy_base": 4518.83, "J_base": 151764.6, "Cw_base": 0},
+      {"designation": "32 NB (H)", "dimensions_display": {"OD": 42.4, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 482.0, "OD_base": 42.4, "t_base": 4.0, "Ixx_base": 89900.0, "Iyy_base": 89900.0, "Ixy_base": 0, "Zx_base": 5212.93, "Zy_base": 5212.93, "J_base": 178941.63, "Cw_base": 0},
+      {"designation": "40 NB (L)", "dimensions_display": {"OD": 48.3, "t": 2.9, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 413.0, "OD_base": 48.3, "t_base": 2.9, "Ixx_base": 107000.0, "Iyy_base": 107000.0, "Ixy_base": 0, "Zx_base": 5570.94, "Zy_base": 5570.94, "J_base": 213103.61, "Cw_base": 0},
+      {"designation": "40 NB (M)", "dimensions_display": {"OD": 48.3, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 453.0, "OD_base": 48.3, "t_base": 3.2, "Ixx_base": 115900.0, "Iyy_base": 115900.0, "Ixy_base": 0, "Zx_base": 5974.0, "Zy_base": 5974.0, "J_base": 230801.95, "Cw_base": 0},
+      {"designation": "40 NB (H)", "dimensions_display": {"OD": 48.3, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 556.0, "OD_base": 48.3, "t_base": 4.0, "Ixx_base": 137700.0, "Iyy_base": 137700.0, "Ixy_base": 0, "Zx_base": 6948.07, "Zy_base": 6948.07, "J_base": 273984.08, "Cw_base": 0},
+      {"designation": "50 NB (L)", "dimensions_display": {"OD": 60.3, "t": 2.9, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 523.0, "OD_base": 60.3, "t_base": 2.9, "Ixx_base": 215900.0, "Iyy_base": 215900.0, "Ixy_base": 0, "Zx_base": 8940.04, "Zy_base": 8940.04, "J_base": 429914.8, "Cw_base": 0},
+      {"designation": "50 NB (M)", "dimensions_display": {"OD": 60.3, "t": 3.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 641.0, "OD_base": 60.3, "t_base": 3.6, "Ixx_base": 258800.0, "Iyy_base": 258800.0, "Ixy_base": 0, "Zx_base": 10540.39, "Zy_base": 10540.39, "J_base": 515209.41, "Cw_base": 0},
+      {"designation": "50 NB (H)", "dimensions_display": {"OD": 60.3, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 788.0, "OD_base": 60.3, "t_base": 4.5, "Ixx_base": 309000.0, "Iyy_base": 309000.0, "Ixy_base": 0, "Zx_base": 12343.98, "Zy_base": 12343.98, "J_base": 614851.09, "Cw_base": 0},
+      {"designation": "65 NB (L)", "dimensions_display": {"OD": 76.1, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 732.0, "OD_base": 76.1, "t_base": 3.2, "Ixx_base": 487900.0, "Iyy_base": 487900.0, "Ixy_base": 0, "Zx_base": 16000.39, "Zy_base": 16000.39, "J_base": 971099.86, "Cw_base": 0},
+      {"designation": "65 NB (M)", "dimensions_display": {"OD": 76.1, "t": 3.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 820.0, "OD_base": 76.1, "t_base": 3.6, "Ixx_base": 540200.0, "Iyy_base": 540200.0, "Ixy_base": 0, "Zx_base": 17620.33, "Zy_base": 17620.33, "J_base": 1075200.8, "Cw_base": 0},
+      {"designation": "65 NB (H)", "dimensions_display": {"OD": 76.1, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1010.0, "OD_base": 76.1, "t_base": 4.5, "Ixx_base": 651200.0, "Iyy_base": 651200.0, "Ixy_base": 0, "Zx_base": 20844.74, "Zy_base": 20844.74, "J_base": 1295881.0, "Cw_base": 0},
+      {"designation": "80 NB (L)", "dimensions_display": {"OD": 88.9, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 861.0, "OD_base": 88.9, "t_base": 3.2, "Ixx_base": 792300.0, "Iyy_base": 792300.0, "Ixy_base": 0, "Zx_base": 22080.01, "Zy_base": 22080.01, "J_base": 1577131.1, "Cw_base": 0},
+      {"designation": "80 NB (M)", "dimensions_display": {"OD": 88.9, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1070.0, "OD_base": 88.9, "t_base": 4.0, "Ixx_base": 963600.0, "Iyy_base": 963600.0, "Ixy_base": 0, "Zx_base": 26394.08, "Zy_base": 26394.08, "J_base": 1918000.8, "Cw_base": 0},
+      {"designation": "80 NB (H)", "dimensions_display": {"OD": 88.9, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1270.0, "OD_base": 88.9, "t_base": 4.8, "Ixx_base": 1125200.0, "Iyy_base": 1125200.0, "Ixy_base": 0, "Zx_base": 30360.33, "Zy_base": 30360.33, "J_base": 2238941.0, "Cw_base": 0},
+      {"designation": "100 NB (L)", "dimensions_display": {"OD": 114.3, "t": 3.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1250.0, "OD_base": 114.3, "t_base": 3.6, "Ixx_base": 1920300.0, "Iyy_base": 1920300.0, "Ixy_base": 0, "Zx_base": 41865.07, "Zy_base": 41865.07, "J_base": 3822391.6, "Cw_base": 0},
+      {"designation": "100 NB (M)", "dimensions_display": {"OD": 114.3, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1550.0, "OD_base": 114.3, "t_base": 4.5, "Ixx_base": 2343000.0, "Iyy_base": 2343000.0, "Ixy_base": 0, "Zx_base": 50486.09, "Zy_base": 50486.09, "J_base": 4663437.5, "Cw_base": 0},
+      {"designation": "100 NB (H)", "dimensions_display": {"OD": 114.3, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1850.0, "OD_base": 114.3, "t_base": 5.4, "Ixx_base": 2745000.0, "Iyy_base": 2745000.0, "Ixy_base": 0, "Zx_base": 58488.0, "Zy_base": 58488.0, "J_base": 5462062.5, "Cw_base": 0},
+      {"designation": "125 NB (L)", "dimensions_display": {"OD": 139.7, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1910.0, "OD_base": 139.7, "t_base": 4.5, "Ixx_base": 4372000.0, "Iyy_base": 4372000.0, "Ixy_base": 0, "Zx_base": 76489.81, "Zy_base": 76489.81, "J_base": 8700031.2, "Cw_base": 0},
+      {"designation": "125 NB (M)", "dimensions_display": {"OD": 139.7, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2030.0, "OD_base": 139.7, "t_base": 4.8, "Ixx_base": 4634400.0, "Iyy_base": 4634400.0, "Ixy_base": 0, "Zx_base": 80570.03, "Zy_base": 80570.03, "J_base": 9222812.5, "Cw_base": 0},
+      {"designation": "125 NB (H)", "dimensions_display": {"OD": 139.7, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2280.0, "OD_base": 139.7, "t_base": 5.4, "Ixx_base": 5145000.0, "Iyy_base": 5145000.0, "Ixy_base": 0, "Zx_base": 88683.08, "Zy_base": 88683.08, "J_base": 10239375.0, "Cw_base": 0},
+      {"designation": "150 NB (L)", "dimensions_display": {"OD": 165.1, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2270.0, "OD_base": 165.1, "t_base": 4.5, "Ixx_base": 7326000.0, "Iyy_base": 7326000.0, "Ixy_base": 0, "Zx_base": 106013.68, "Zy_base": 106013.68, "J_base": 14579687.5, "Cw_base": 0},
+      {"designation": "150 NB (M)", "dimensions_display": {"OD": 165.1, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2420.0, "OD_base": 165.1, "t_base": 4.8, "Ixx_base": 7773200.0, "Iyy_base": 7773200.0, "Ixy_base": 0, "Zx_base": 112229.0, "Zy_base": 112229.0, "J_base": 15470312.5, "Cw_base": 0},
+      {"designation": "150 NB (H)", "dimensions_display": {"OD": 165.1, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2710.0, "OD_base": 165.1, "t_base": 5.4, "Ixx_base": 8647000.0, "Iyy_base": 8647000.0, "Ixy_base": 0, "Zx_base": 123768.06, "Zy_base": 123768.06, "J_base": 17215625.0, "Cw_base": 0},
+      {"designation": "200 NB (L)", "dimensions_display": {"OD": 219.1, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 3230.0, "OD_base": 219.1, "t_base": 4.8, "Ixx_base": 18565100.0, "Iyy_base": 18565100.0, "Ixy_base": 0, "Zx_base": 209800.33, "Zy_base": 209800.33, "J_base": 36941875.0, "Cw_base": 0},
+      {"designation": "200 NB (M)", "dimensions_display": {"OD": 219.1, "t": 5.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 3750.0, "OD_base": 219.1, "t_base": 5.6, "Ixx_base": 21410000.0, "Iyy_base": 21410000.0, "Ixy_base": 0, "Zx_base": 240405.31, "Zy_base": 240405.31, "J_base": 42600000.0, "Cw_base": 0},
+      {"designation": "200 NB (H)", "dimensions_display": {"OD": 219.1, "t": 5.9, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 3950.0, "OD_base": 219.1, "t_base": 5.9, "Ixx_base": 22470000.0, "Iyy_base": 22470000.0, "Ixy_base": 0, "Zx_base": 251850.83, "Zy_base": 251850.83, "J_base": 44703125.0, "Cw_base": 0}
+    ],
+    "HSS-Rectangular": [
+      {"designation": "SHS 25x25x2.0", "dimensions_display": {"H": 25.0, "B": 25.0, "t": 2.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 174.0, "H_base": 25.0, "B_base": 25.0, "t_base": 2.0, "Ixx_base": 14800.0, "Iyy_base": 14800.0, "Ixy_base": 0, "Zx_base": 1591.0, "Zy_base": 1591.0, "J_base": 22900.0, "Cw_base": 0},
+      {"designation": "SHS 25x25x2.6", "dimensions_display": {"H": 25.0, "B": 25.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 216.0, "H_base": 25.0, "B_base": 25.0, "t_base": 2.6, "Ixx_base": 17200.0, "Iyy_base": 17200.0, "Ixy_base": 0, "Zx_base": 1796.04, "Zy_base": 1796.04, "J_base": 26800.0, "Cw_base": 0},
+      {"designation": "SHS 25x25x3.2", "dimensions_display": {"H": 25.0, "B": 25.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 253.0, "H_base": 25.0, "B_base": 25.0, "t_base": 3.2, "Ixx_base": 18900.0, "Iyy_base": 18900.0, "Ixy_base": 0, "Zx_base": 1933.43, "Zy_base": 1933.43, "J_base": 29600.0, "Cw_base": 0},
+      {"designation": "SHS 32x32x2.0", "dimensions_display": {"H": 32.0, "B": 32.0, "t": 2.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 230.0, "H_base": 32.0, "B_base": 32.0, "t_base": 2.0, "Ixx_base": 33600.0, "Iyy_base": 33600.0, "Ixy_base": 0, "Zx_base": 2730.0, "Zy_base": 2730.0, "J_base": 53000.0, "Cw_base": 0},
+      {"designation": "SHS 32x32x2.6", "dimensions_display": {"H": 32.0, "B": 32.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 288.0, "H_base": 32.0, "B_base": 32.0, "t_base": 2.6, "Ixx_base": 40200.0, "Iyy_base": 40200.0, "Ixy_base": 0, "Zx_base": 3183.84, "Zy_base": 3183.84, "J_base": 64500.0, "Cw_base": 0},
+      {"designation": "SHS 32x32x3.2", "dimensions_display": {"H": 32.0, "B": 32.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 342.0, "H_base": 32.0, "B_base": 32.0, "t_base": 3.2, "Ixx_base": 45400.0, "Iyy_base": 45400.0, "Ixy_base": 0, "Zx_base": 3532.53, "Zy_base": 3532.53, "J_base": 74100.0, "Cw_base": 0},
+      {"designation": "SHS 38x38x2.6", "dimensions_display": {"H": 38.0, "B": 38.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 351.0, "H_base": 38.0, "B_base": 38.0, "t_base": 2.6, "Ixx_base": 71400.0, "Iyy_base": 71400.0, "Ixy_base": 0, "Zx_base": 4815.24, "Zy_base": 4815.24, "J_base": 115100.0, "Cw_base": 0},
+      {"designation": "SHS 38x38x3.2", "dimensions_display": {"H": 38.0, "B": 38.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 419.0, "H_base": 38.0, "B_base": 38.0, "t_base": 3.2, "Ixx_base": 81800.0, "Iyy_base": 81800.0, "Ixy_base": 0, "Zx_base": 5394.77, "Zy_base": 5394.77, "J_base": 134500.0, "Cw_base": 0},
+      {"designation": "SHS 38x38x4.0", "dimensions_display": {"H": 38.0, "B": 38.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 503.0, "H_base": 38.0, "B_base": 38.0, "t_base": 4.0, "Ixx_base": 92600.0, "Iyy_base": 92600.0, "Ixy_base": 0, "Zx_base": 5985.0, "Zy_base": 5985.0, "J_base": 156700.0, "Cw_base": 0},
+      {"designation": "SHS 40x40x2.6", "dimensions_display": {"H": 40.0, "B": 40.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 372.0, "H_base": 40.0, "B_base": 40.0, "t_base": 2.6, "Ixx_base": 84500.0, "Iyy_base": 84500.0, "Ixy_base": 0, "Zx_base": 5499.84, "Zy_base": 5499.84, "J_base": 136300.0, "Cw_base": 0},
+      {"designation": "SHS 40x40x3.2", "dimensions_display": {"H": 40.0, "B": 40.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 445.0, "H_base": 40.0, "B_base": 40.0, "t_base": 3.2, "Ixx_base": 97200.0, "Iyy_base": 97200.0, "Ixy_base": 0, "Zx_base": 6204.37, "Zy_base": 6204.37, "J_base": 160000.0, "Cw_base": 0},
+      {"designation": "SHS 40x40x4.0", "dimensions_display": {"H": 40.0, "B": 40.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 535.0, "H_base": 40.0, "B_base": 40.0, "t_base": 4.0, "Ixx_base": 110700.0, "Iyy_base": 110700.0, "Ixy_base": 0, "Zx_base": 6900.0, "Zy_base": 6900.0, "J_base": 187500.0, "Cw_base": 0},
+      {"designation": "SHS 50x50x2.6", "dimensions_display": {"H": 50.0, "B": 50.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 476.0, "H_base": 50.0, "B_base": 50.0, "t_base": 2.6, "Ixx_base": 174700.0, "Iyy_base": 174700.0, "Ixy_base": 0, "Zx_base": 9203.04, "Zy_base": 9203.04, "J_base": 285300.0, "Cw_base": 0},
+      {"designation": "SHS 50x50x2.9", "dimensions_display": {"H": 50.0, "B": 50.0, "t": 2.9, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 525.0, "H_base": 50.0, "B_base": 50.0, "t_base": 2.9, "Ixx_base": 189900.0, "Iyy_base": 189900.0, "Ixy_base": 0, "Zx_base": 9965.99, "Zy_base": 9965.99, "J_base": 311500.0, "Cw_base": 0},
+      {"designation": "SHS 50x50x3.6", "dimensions_display": {"H": 50.0, "B": 50.0, "t": 3.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 635.0, "H_base": 50.0, "B_base": 50.0, "t_base": 3.6, "Ixx_base": 221500.0, "Iyy_base": 221500.0, "Ixy_base": 0, "Zx_base": 11412.36, "Zy_base": 11412.36, "J_base": 365800.0, "Cw_base": 0},
+      {"designation": "SHS 50x50x4.5", "dimensions_display": {"H": 50.0, "B": 50.0, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 767.0, "H_base": 50.0, "B_base": 50.0, "t_base": 4.5, "Ixx_base": 255000.0, "Iyy_base": 255000.0, "Ixy_base": 0, "Zx_base": 12836.25, "Zy_base": 12836.25, "J_base": 419900.0, "Cw_base": 0},
+      {"designation": "SHS 60x60x2.6", "dimensions_display": {"H": 60.0, "B": 60.0, "t": 2.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 580.0, "H_base": 60.0, "B_base": 60.0, "t_base": 2.6, "Ixx_base": 313300.0, "Iyy_base": 313300.0, "Ixy_base": 0, "Zx_base": 13530.24, "Zy_base": 13530.24, "J_base": 500800.0, "Cw_base": 0},
+      {"designation": "SHS 60x60x3.2", "dimensions_display": {"H": 60.0, "B": 60.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 701.0, "H_base": 60.0, "B_base": 60.0, "t_base": 3.2, "Ixx_base": 369400.0, "Iyy_base": 369400.0, "Ixy_base": 0, "Zx_base": 15611.33, "Zy_base": 15611.33, "J_base": 600200.0, "Cw_base": 0},
+      {"designation": "SHS 60x60x4.0", "dimensions_display": {"H": 60.0, "B": 60.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 855.0, "H_base": 60.0, "B_base": 60.0, "t_base": 4.0, "Ixx_base": 435500.0, "Iyy_base": 435500.0, "Ixy_base": 0, "Zx_base": 18050.0, "Zy_base": 18050.0, "J_base": 724100.0, "Cw_base": 0},
+      {"designation": "SHS 60x60x4.8", "dimensions_display": {"H": 60.0, "B": 60.0, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1001.0, "H_base": 60.0, "B_base": 60.0, "t_base": 4.8, "Ixx_base": 492200.0, "Iyy_base": 492200.0, "Ixy_base": 0, "Zx_base": 20043.23, "Zy_base": 20043.23, "J_base": 838600.0, "Cw_base": 0},
+      {"designation": "SHS 72x72x3.2", "dimensions_display": {"H": 72.0, "B": 72.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 854.0, "H_base": 72.0, "B_base": 72.0, "t_base": 3.2, "Ixx_base": 663200.0, "Iyy_base": 663200.0, "Ixy_base": 0, "Zx_base": 22970.69, "Zy_base": 22970.69, "J_base": 1068100.0, "Cw_base": 0},
+      {"designation": "SHS 72x72x4.0", "dimensions_display": {"H": 72.0, "B": 72.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1047.0, "H_base": 72.0, "B_base": 72.0, "t_base": 4.0, "Ixx_base": 790300.0, "Iyy_base": 790300.0, "Ixy_base": 0, "Zx_base": 26810.0, "Zy_base": 26810.0, "J_base": 1298500.0, "Cw_base": 0},
+      {"designation": "SHS 72x72x4.8", "dimensions_display": {"H": 72.0, "B": 72.0, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1231.0, "H_base": 72.0, "B_base": 72.0, "t_base": 4.8, "Ixx_base": 903100.0, "Iyy_base": 903100.0, "Ixy_base": 0, "Zx_base": 30131.14, "Zy_base": 30131.14, "J_base": 1515500.0, "Cw_base": 0},
+      {"designation": "SHS 80x80x3.2", "dimensions_display": {"H": 80.0, "B": 80.0, "t": 3.2, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 957.0, "H_base": 80.0, "B_base": 80.0, "t_base": 3.2, "Ixx_base": 927100.0, "Iyy_base": 927100.0, "Ixy_base": 0, "Zx_base": 29073.73, "Zy_base": 29073.73, "J_base": 1485500.0, "Cw_base": 0},
+      {"designation": "SHS 80x80x4.0", "dimensions_display": {"H": 80.0, "B": 80.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1175.0, "H_base": 80.0, "B_base": 80.0, "t_base": 4.0, "Ixx_base": 1110400.0, "Iyy_base": 1110400.0, "Ixy_base": 0, "Zx_base": 34150.0, "Zy_base": 34150.0, "J_base": 1812200.0, "Cw_base": 0},
+      {"designation": "SHS 80x80x4.8", "dimensions_display": {"H": 80.0, "B": 80.0, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1385.0, "H_base": 80.0, "B_base": 80.0, "t_base": 4.8, "Ixx_base": 1275800.0, "Iyy_base": 1275800.0, "Ixy_base": 0, "Zx_base": 38610.84, "Zy_base": 38610.84, "J_base": 2122600.0, "Cw_base": 0},
+      {"designation": "SHS 91.5x91.5x3.6", "dimensions_display": {"H": 91.5, "B": 91.5, "t": 3.6, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1232.0, "H_base": 91.5, "B_base": 91.5, "t_base": 3.6, "Ixx_base": 1564900.0, "Iyy_base": 1564900.0, "Ixy_base": 0, "Zx_base": 42011.81, "Zy_base": 42011.81, "J_base": 2511700.0, "Cw_base": 0},
+      {"designation": "SHS 91.5x91.5x4.5", "dimensions_display": {"H": 91.5, "B": 91.5, "t": 4.5, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1514.0, "H_base": 91.5, "B_base": 91.5, "t_base": 4.5, "Ixx_base": 1875700.0, "Iyy_base": 1875700.0, "Ixy_base": 0, "Zx_base": 49581.25, "Zy_base": 49581.25, "J_base": 3067800.0, "Cw_base": 0},
+      {"designation": "SHS 91.5x91.5x5.4", "dimensions_display": {"H": 91.5, "B": 91.5, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1785.0, "H_base": 91.5, "B_base": 91.5, "t_base": 5.4, "Ixx_base": 2156800.0, "Iyy_base": 2156800.0, "Ixy_base": 0, "Zx_base": 56380.04, "Zy_base": 56380.04, "J_base": 3597600.0, "Cw_base": 0},
+      {"designation": "SHS 100x100x4.0", "dimensions_display": {"H": 100.0, "B": 100.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1495.0, "H_base": 100.0, "B_base": 100.0, "t_base": 4.0, "Ixx_base": 2263500.0, "Iyy_base": 2263500.0, "Ixy_base": 0, "Zx_base": 55850.0, "Zy_base": 55850.0, "J_base": 3647500.0, "Cw_base": 0},
+      {"designation": "SHS 100x100x5.0", "dimensions_display": {"H": 100.0, "B": 100.0, "t": 5.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 1836.0, "H_base": 100.0, "B_base": 100.0, "t_base": 5.0, "Ixx_base": 2711000.0, "Iyy_base": 2711000.0, "Ixy_base": 0, "Zx_base": 65837.5, "Zy_base": 65837.5, "J_base": 4418400.0, "Cw_base": 0},
+      {"designation": "SHS 100x100x6.0", "dimensions_display": {"H": 100.0, "B": 100.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2163.0, "H_base": 100.0, "B_base": 100.0, "t_base": 6.0, "Ixx_base": 3114700.0, "Iyy_base": 3114700.0, "Ixy_base": 0, "Zx_base": 74841.0, "Zy_base": 74841.0, "J_base": 5118000.0, "Cw_base": 0},
+      {"designation": "SHS 113.5x113.5x4.8", "dimensions_display": {"H": 113.5, "B": 113.5, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2028.0, "H_base": 113.5, "B_base": 113.5, "t_base": 4.8, "Ixx_base": 3933000.0, "Iyy_base": 3933000.0, "Ixy_base": 0, "Zx_base": 84090.03, "Zy_base": 84090.03, "J_base": 6374500.0, "Cw_base": 0},
+      {"designation": "SHS 113.5x113.5x5.4", "dimensions_display": {"H": 113.5, "B": 113.5, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2260.0, "H_base": 113.5, "B_base": 113.5, "t_base": 5.4, "Ixx_base": 4325800.0, "Iyy_base": 4325800.0, "Ixy_base": 0, "Zx_base": 91840.04, "Zy_base": 91840.04, "J_base": 7086900.0, "Cw_base": 0},
+      {"designation": "SHS 132x132x4.8", "dimensions_display": {"H": 132.0, "B": 132.0, "t": 4.8, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2383.0, "H_base": 132.0, "B_base": 132.0, "t_base": 4.8, "Ixx_base": 6343900.0, "Iyy_base": 6343900.0, "Ixy_base": 0, "Zx_base": 115410.8, "Zy_base": 115410.8, "J_base": 10183000.0, "Cw_base": 0},
+      {"designation": "SHS 132x132x5.4", "dimensions_display": {"H": 132.0, "B": 132.0, "t": 5.4, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2660.0, "H_base": 132.0, "B_base": 132.0, "t_base": 5.4, "Ixx_base": 7001100.0, "Iyy_base": 7001100.0, "Ixy_base": 0, "Zx_base": 126203.0, "Zy_base": 126203.0, "J_base": 11342500.0, "Cw_base": 0},
+      {"designation": "SHS 150x150x4.0", "dimensions_display": {"H": 150.0, "B": 150.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2295.0, "H_base": 150.0, "B_base": 150.0, "t_base": 4.0, "Ixx_base": 8078200.0, "Iyy_base": 8078200.0, "Ixy_base": 0, "Zx_base": 131650.0, "Zy_base": 131650.0, "J_base": 12734600.0, "Cw_base": 0},
+      {"designation": "SHS 150x150x5.0", "dimensions_display": {"H": 150.0, "B": 150.0, "t": 5.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2836.0, "H_base": 150.0, "B_base": 150.0, "t_base": 5.0, "Ixx_base": 9821200.0, "Iyy_base": 9821200.0, "Ixy_base": 0, "Zx_base": 157587.5, "Zy_base": 157587.5, "J_base": 15690900.0, "Cw_base": 0},
+      {"designation": "SHS 150x150x6.0", "dimensions_display": {"H": 150.0, "B": 150.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 3363.0, "H_base": 150.0, "B_base": 150.0, "t_base": 6.0, "Ixx_base": 11459100.0, "Iyy_base": 11459100.0, "Ixy_base": 0, "Zx_base": 181551.0, "Zy_base": 181551.0, "J_base": 18561800.0, "Cw_base": 0},
+      {"designation": "SHS 150x150x8.0", "dimensions_display": {"H": 150.0, "B": 150.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 4379.0, "H_base": 150.0, "B_base": 150.0, "t_base": 8.0, "Ixx_base": 14430000.0, "Iyy_base": 14430000.0, "Ixy_base": 0, "Zx_base": 222050.0, "Zy_base": 222050.0, "J_base": 24057800.0, "Cw_base": 0},
+      {"designation": "SHS 180x180x4.0", "dimensions_display": {"H": 180.0, "B": 180.0, "t": 4.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 2775.0, "H_base": 180.0, "B_base": 180.0, "t_base": 4.0, "Ixx_base": 14217400.0, "Iyy_base": 14217400.0, "Ixy_base": 0, "Zx_base": 193850.0, "Zy_base": 193850.0, "J_base": 22243100.0, "Cw_base": 0},
+      {"designation": "SHS 180x180x5.0", "dimensions_display": {"H": 180.0, "B": 180.0, "t": 5.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 3436.0, "H_base": 180.0, "B_base": 180.0, "t_base": 5.0, "Ixx_base": 17368700.0, "Iyy_base": 17368700.0, "Ixy_base": 0, "Zx_base": 233487.5, "Zy_base": 233487.5, "J_base": 27479300.0, "Cw_base": 0},
+      {"designation": "SHS 180x180x6.0", "dimensions_display": {"H": 180.0, "B": 180.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 4083.0, "H_base": 180.0, "B_base": 180.0, "t_base": 6.0, "Ixx_base": 20365200.0, "Iyy_base": 20365200.0, "Ixy_base": 0, "Zx_base": 270981.0, "Zy_base": 270981.0, "J_base": 32592300.0, "Cw_base": 0},
+      {"designation": "SHS 180x180x8.0", "dimensions_display": {"H": 180.0, "B": 180.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 5339.0, "H_base": 180.0, "B_base": 180.0, "t_base": 8.0, "Ixx_base": 25907300.0, "Iyy_base": 25907300.0, "Ixy_base": 0, "Zx_base": 337550.0, "Zy_base": 337550.0, "J_base": 42461600.0, "Cw_base": 0},
+      {"designation": "SHS 220x220x5.0", "dimensions_display": {"H": 220.0, "B": 220.0, "t": 5.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 4236.0, "H_base": 220.0, "B_base": 220.0, "t_base": 5.0, "Ixx_base": 32381200.0, "Iyy_base": 32381200.0, "Ixy_base": 0, "Zx_base": 363487.5, "Zy_base": 363487.5, "J_base": 50831700.0, "Cw_base": 0},
+      {"designation": "SHS 220x220x6.0", "dimensions_display": {"H": 220.0, "B": 220.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 5043.0, "H_base": 220.0, "B": 220.0, "t_base": 6.0, "Ixx_base": 38133600.0, "Iyy_base": 38133600.0, "Ixy_base": 0, "Zx_base": 424881.0, "Zy_base": 424881.0, "J_base": 60345300.0, "Cw_base": 0},
+      {"designation": "SHS 220x220x8.0", "dimensions_display": {"H": 220.0, "B": 220.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 6619.0, "H_base": 220.0, "B": 220.0, "t_base": 8.0, "Ixx_base": 48949900.0, "Iyy_base": 48949900.0, "Ixy_base": 0, "Zx_base": 538150.0, "Zy_base": 538150.0, "J_base": 78974800.0, "Cw_base": 0},
+      {"designation": "SHS 220x220x10.0", "dimensions_display": {"H": 220.0, "B": 220.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 8143.0, "H_base": 220.0, "B": 220.0, "t_base": 10.0, "Ixx_base": 58871900.0, "Iyy_base": 58871900.0, "Ixy_base": 0, "Zx_base": 641625.0, "Zy_base": 641625.0, "J_base": 95491500.0, "Cw_base": 0},
+      {"designation": "SHS 250x250x6.0", "dimensions_display": {"H": 250.0, "B": 250.0, "t": 6.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 5763.0, "H_base": 250.0, "B_base": 250.0, "t_base": 6.0, "Ixx_base": 56720000.0, "Iyy_base": 56720000.0, "Ixy_base": 0, "Zx_base": 558051.0, "Zy_base": 558051.0, "J_base": 89204400.0, "Cw_base": 0},
+      {"designation": "SHS 250x250x8.0", "dimensions_display": {"H": 250.0, "B": 250.0, "t": 8.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 7579.0, "H_base": 250.0, "B_base": 250.0, "t_base": 8.0, "Ixx_base": 73156500.0, "Iyy_base": 73156500.0, "Ixy_base": 0, "Zx_base": 706550.0, "Zy_base": 706550.0, "J_base": 117020700.0, "Cw_base": 0},
+      {"designation": "SHS 250x250x10.0", "dimensions_display": {"H": 250.0, "B": 250.0, "t": 10.0, "unit_system_of_dims": "METRIC_MM_N"}, "A_base": 9343.0, "H_base": 250.0, "B": 250.0, "t_base": 10.0, "Ixx_base": 88422900.0, "Iyy_base": 88422900.0, "Ixy_base": 0, "Zx_base": 843125.0, "Zy_base": 843125.0, "J_base": 142481500.0, "Cw_base": 0}
+    ]
+  }
+}
