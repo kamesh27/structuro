@@ -218,11 +218,12 @@ class Section:
 
 # --- Standard Rolled Section ---
 class StandardRolledSection(Section):
-    def __init__(self, unit_system_obj, shape_type, section_data=None, manual_dims=None):
+    def __init__(self, unit_system_obj, shape_type, standard_code=None, section_data=None, manual_dims=None):
         super().__init__(unit_system_obj)
         self.shape_type = shape_type
-        self.section_data_from_lib = section_data 
-        self.manual_dims_input = manual_dims 
+        self.standard_code = standard_code
+        self.section_data_from_lib = section_data
+        self.manual_dims_input = manual_dims
 
         if self.section_data_from_lib:
             self._load_from_library()
@@ -232,37 +233,58 @@ class StandardRolledSection(Section):
             raise ValueError("Either section_data (library) or manual_dims must be provided.")
 
     def _load_from_library(self):
-        self.properties["A"] = self.section_data_from_lib.get("A_base")
-        self.properties["Ixx"] = self.section_data_from_lib.get("Ixx_base")
-        self.properties["Iyy"] = self.section_data_from_lib.get("Iyy_base")
-        self.properties["Ixy"] = self.section_data_from_lib.get("Ixy_base", 0)
-        self.properties["J"] = self.section_data_from_lib.get("J_base")
-        self.properties["Cw"] = self.section_data_from_lib.get("Cw_base")
-        self.properties["Zx"] = self.section_data_from_lib.get("Zx_base") 
-        self.properties["Zy"] = self.section_data_from_lib.get("Zy_base")
-        self.properties["Xc"] = 0 
-        self.properties["Yc"] = 0
-        d_base = self.section_data_from_lib.get("d_base")
-        bf_base = self.section_data_from_lib.get("bf_base")
-        od_base = self.section_data_from_lib.get("OD_base", self.section_data_from_lib.get("D_base"))
-        h_rect_base = self.section_data_from_lib.get("H_base", self.section_data_from_lib.get("h_base"))
-        b_rect_base = self.section_data_from_lib.get("B_base", self.section_data_from_lib.get("b_base"))
+        # Store base dimensions first, as they are needed for calculations
+        self.input_dims_converted_to_base = {}
+        # Always load these core dimensions if available
+        core_dims_to_load = ["d_base", "bf_base", "tf_base", "tw_base", "h_base", "b_base", "OD_base", "ID_base", "t_base", "L1_base", "L2_base", "H_base", "B_base", "ts_base", "D_base"]
+        for dim_key_with_suffix in core_dims_to_load:
+            if dim_key_with_suffix in self.section_data_from_lib:
+                dim_key = dim_key_with_suffix.replace("_base", "")
+                self.input_dims_converted_to_base[dim_key] = self.section_data_from_lib[dim_key_with_suffix]
 
-        if d_base: 
+        # Load Area (A)
+        self.properties["A"] = self.section_data_from_lib.get("A_base")
+        self.properties["Xc"] = 0 # Assume centroid at origin for library sections initially
+        self.properties["Yc"] = 0
+
+        if self.standard_code == "INDIAN_SP6":
+            # For INDIAN_SP6, only A, d, bf, tf, tw are used from library.
+            # Other properties will be calculated.
+            # Ensure the necessary dimensions are in input_dims_converted_to_base
+            # (already handled by loading core_dims_to_load)
+            pass # No further properties loaded from library for SP6
+        else:
+            # For other standards, load all available pre-calculated properties
+            self.properties["Ixx"] = self.section_data_from_lib.get("Ixx_base")
+            self.properties["Iyy"] = self.section_data_from_lib.get("Iyy_base")
+            self.properties["Ixy"] = self.section_data_from_lib.get("Ixy_base", 0)
+            self.properties["J"] = self.section_data_from_lib.get("J_base")
+            self.properties["Cw"] = self.section_data_from_lib.get("Cw_base")
+            self.properties["Zx"] = self.section_data_from_lib.get("Zx_base")
+            self.properties["Zy"] = self.section_data_from_lib.get("Zy_base")
+
+        # Calculate y_top, y_bottom, etc. based on loaded dimensions
+        d_base = self.input_dims_converted_to_base.get("d")
+        bf_base = self.input_dims_converted_to_base.get("bf")
+        od_base = self.input_dims_converted_to_base.get("OD", self.input_dims_converted_to_base.get("D"))
+        h_rect_base = self.input_dims_converted_to_base.get("H", self.input_dims_converted_to_base.get("h"))
+        b_rect_base = self.input_dims_converted_to_base.get("B", self.input_dims_converted_to_base.get("b"))
+
+        if d_base is not None:
             self.properties["y_top"], self.properties["y_bottom"] = d_base / 2, d_base / 2
-        elif od_base: 
+        elif od_base is not None:
              self.properties["y_top"], self.properties["y_bottom"] = od_base / 2, od_base / 2
-        elif h_rect_base: 
+        elif h_rect_base is not None:
             self.properties["y_top"], self.properties["y_bottom"] = h_rect_base / 2, h_rect_base / 2
-        
-        if bf_base: 
+
+        if bf_base is not None:
             self.properties["x_left"], self.properties["x_right"] = bf_base / 2, bf_base / 2
-        elif od_base: 
+        elif od_base is not None:
             self.properties["x_left"], self.properties["x_right"] = od_base / 2, od_base / 2
-        elif b_rect_base: 
+        elif b_rect_base is not None:
             self.properties["x_left"], self.properties["x_right"] = b_rect_base / 2, b_rect_base / 2
-            
-        self.input_dims = self.section_data_from_lib.get("dimensions_display", {})
+
+        self.input_dims = self.section_data_from_lib.get("dimensions_display", {}) # Keep display dims for info
 
     def _process_manual_dims(self):
         self.input_dims_converted_to_base = self._convert_inputs_to_base(self.manual_dims_input)
@@ -693,6 +715,28 @@ class StandardRolledSection(Section):
         })
 
     def calculate_properties(self):
+        if self.section_data_from_lib and self.standard_code == "INDIAN_SP6":
+            # For INDIAN_SP6, dimensions and Area are loaded. Calculate other geometric props.
+            if self.shape_type == "SolidRectangle": self._calculate_solid_rectangle_integration()
+            elif self.shape_type == "I-Beam": self._calculate_i_beam_integration()
+            elif self.shape_type == "SolidCircle": self._calculate_solid_circle_integration()
+            elif self.shape_type == "Channel": self._calculate_channel_integration()
+            elif self.shape_type == "Angle": self._calculate_angle_integration()
+            elif self.shape_type == "Tee": self._calculate_tee_integration()
+            elif self.shape_type == "HSS-Rectangular": self._calculate_hss_rectangular_integration()
+            elif self.shape_type == "HSS-Circular": self._calculate_hss_circular_integration()
+            # Note: _calculate_..._integration methods update self.properties with Ixx, J, etc.
+            # They also set y_top, y_bottom etc. based on the dimensions.
+            # Area (A) was already loaded from library for SP6.
+        elif self.shape_type == "I-Beam" and self.section_data_from_lib and self.standard_code != "INDIAN_SP6":
+            # For non-SP6 library I-Beams, if J was not loaded (e.g. old library format or specific exclusion)
+            # then calculate it. This maintains previous logic for non-SP6 I-Beams.
+            if "J" not in self.properties or self.properties["J"] is None:
+                 self._calculate_i_beam_integration() # This will calculate J and other props like Zx, Zy
+
+        # For manual input, _process_manual_dims already called the specific _calculate_..._integration method.
+        # For library sections (non-SP6), most properties are loaded directly in _load_from_library.
+
         self._calculate_general_properties()
 
 # --- Flask App Setup ---
@@ -727,12 +771,12 @@ class SectionCalculatorApp:
         try:
             section_data_list = self.section_library[standard_code][shape_type]
             section_data = next(s for s in section_data_list if s["designation"] == designation)
-            self.current_section = StandardRolledSection(self.unit_system_obj, shape_type, section_data=section_data)
+            self.current_section = StandardRolledSection(self.unit_system_obj, shape_type, standard_code=standard_code, section_data=section_data)
         except (KeyError, StopIteration): raise ValueError(f"Section {designation} not found.")
 
     def define_standard_section_manual(self, shape_type, dims):
         if not self.section_type_name == "StandardRolled": raise ValueError("Section type must be 'StandardRolled'")
-        self.current_section = StandardRolledSection(self.unit_system_obj, shape_type, manual_dims=dims)
+        self.current_section = StandardRolledSection(self.unit_system_obj, shape_type, standard_code=None, manual_dims=dims)
 
     def calculate(self):
         if self.current_section:
