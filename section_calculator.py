@@ -6,6 +6,7 @@ import json
 from flask import Flask, render_template, request, jsonify, send_file
 from io import BytesIO  
 import openpyxl
+import scipy.integrate as spi
 
 # --- Constants ---
 PI = math.pi
@@ -265,273 +266,430 @@ class StandardRolledSection(Section):
 
     def _process_manual_dims(self):
         self.input_dims_converted_to_base = self._convert_inputs_to_base(self.manual_dims_input)
-        if self.shape_type == "SolidRectangle": self._calculate_solid_rectangle()
-        elif self.shape_type == "I-Beam": self._calculate_i_beam()
-        elif self.shape_type == "SolidCircle": self._calculate_solid_circle()
-        elif self.shape_type == "Channel": self._calculate_channel()
-        elif self.shape_type == "Angle": self._calculate_angle()
-        elif self.shape_type == "Tee": self._calculate_tee()
-        elif self.shape_type == "HSS-Rectangular": self._calculate_hss_rectangular()
-        elif self.shape_type == "HSS-Circular": self._calculate_hss_circular()
+        if self.shape_type == "SolidRectangle": self._calculate_solid_rectangle_integration()
+        elif self.shape_type == "I-Beam": self._calculate_i_beam_integration()
+        elif self.shape_type == "SolidCircle": self._calculate_solid_circle_integration()
+        elif self.shape_type == "Channel": self._calculate_channel_integration()
+        elif self.shape_type == "Angle": self._calculate_angle_integration()
+        elif self.shape_type == "Tee": self._calculate_tee_integration()
+        elif self.shape_type == "HSS-Rectangular": self._calculate_hss_rectangular_integration()
+        elif self.shape_type == "HSS-Circular": self._calculate_hss_circular_integration()
         else: raise NotImplementedError(f"Manual calculation for {self.shape_type} not yet implemented.")
 
-    def _calculate_solid_rectangle(self):
-        b = self.input_dims_converted_to_base.get("b") 
-        h = self.input_dims_converted_to_base.get("h") 
-        if b is None or h is None: raise ValueError("Width (b) and Height (h) must be provided.")
-        if b <=0 or h <=0: raise ValueError("Dimensions must be positive.")
+    def _integrate_rectangle_part(self, width, height, x_offset_corner, y_offset_corner):
+        """
+        Integrates properties for a rectangular part.
+        x_offset_corner, y_offset_corner are coordinates of the bottom-left corner of the rectangle
+        relative to the common origin for the entire section.
+        """
+        x_min_part = x_offset_corner
+        x_max_part = x_offset_corner + width
+        y_min_part = y_offset_corner
+        y_max_part = y_offset_corner + height
+
+        area_integrand = lambda y, x: 1
+        Qx_integrand = lambda y, x: y
+        Qy_integrand = lambda y, x: x
+        Ixx_o_integrand = lambda y, x: y**2
+        Iyy_o_integrand = lambda y, x: x**2
+        Ixy_o_integrand = lambda y, x: x * y
+
+        A_part, _ = spi.dblquad(area_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        Qx_part, _ = spi.dblquad(Qx_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        Qy_part, _ = spi.dblquad(Qy_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        Ixx_o_part, _ = spi.dblquad(Ixx_o_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        Iyy_o_part, _ = spi.dblquad(Iyy_o_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        Ixy_o_part, _ = spi.dblquad(Ixy_o_integrand, x_min_part, x_max_part, lambda x: y_min_part, lambda x: y_max_part)
+        
+        return A_part, Qx_part, Qy_part, Ixx_o_part, Iyy_o_part, Ixy_o_part
+
+    def _integrate_solid_circular_part(self, R_dim):
+        """Integrates properties for a solid circular part of radius R_dim centered at origin."""
+        if R_dim < 1e-9: # Effectively no circle
+            return 0, 0, 0, 0, 0, 0, 0
+
+        area_integrand = lambda y, x: 1
+        Qx_integrand = lambda y, x: y
+        Qy_integrand = lambda y, x: x
+        Ixx_o_integrand = lambda y, x: y**2
+        Iyy_o_integrand = lambda y, x: x**2
+        Ixy_o_integrand = lambda y, x: x * y
+        J_integrand = lambda y, x: x**2 + y**2
+
+        y_limit_func = lambda x: math.sqrt(R_dim**2 - x**2) if R_dim**2 - x**2 >= 0 else 0
+        
+        A, _ = spi.dblquad(area_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        Qx, _ = spi.dblquad(Qx_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        Qy, _ = spi.dblquad(Qy_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        Ixx_o, _ = spi.dblquad(Ixx_o_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        Iyy_o, _ = spi.dblquad(Iyy_o_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        Ixy_o, _ = spi.dblquad(Ixy_o_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        J_val, _ = spi.dblquad(J_integrand, -R_dim, R_dim, lambda x: -y_limit_func(x), lambda x: y_limit_func(x))
+        return A, Qx, Qy, Ixx_o, Iyy_o, Ixy_o, J_val
+
+    def _calculate_solid_rectangle_integration(self):
+        b_dim = self.input_dims_converted_to_base.get("b")
+        h_dim = self.input_dims_converted_to_base.get("h")
+        if b_dim is None or h_dim is None: raise ValueError("Width (b) and Height (h) must be provided.")
+        if b_dim <=0 or h_dim <=0: raise ValueError("Dimensions must be positive.")
+
+        # Origin at the geometric center of the rectangle
+        A, Qx_o, Qy_o, Ixx_o, Iyy_o, Ixy_o = \
+            self._integrate_rectangle_part(b_dim, h_dim, -b_dim/2, -h_dim/2)
+        
+        Xc = Qy_o / A if A != 0 else 0
+        Yc = Qx_o / A if A != 0 else 0
+        
+        Ixx = Ixx_o - A * Yc**2 # Yc should be 0
+        Iyy = Iyy_o - A * Xc**2 # Xc should be 0
+        Ixy = Ixy_o - A * Xc * Yc # Xc, Yc should be 0
+
+        J_val = 0
+        if max(b_dim, h_dim) > 1e-9:
+            ratio = min(b_dim, h_dim) / max(b_dim, h_dim)
+            J_val = (1/3) * (1 - 0.63 * ratio + 0.052 * ratio**5) * max(b_dim, h_dim) * min(b_dim, h_dim)**3
+        
         self.properties.update({
-            "A": b * h, "Xc": 0, "Yc": 0, "Ixx": (b * h**3)/12, "Iyy": (h * b**3)/12, "Ixy": 0,
-            "y_top": h/2, "y_bottom": h/2, "x_left": b/2, "x_right": b/2,
-            "J": (1/3) * (1 - 0.63 * (min(b,h)/max(b,h)) + 0.052 * (min(b,h)/max(b,h))**5) * max(b,h) * min(b,h)**3 if max(b,h) > 0 else 0,
-            "Cw": 0, "Zx": (b * h**2)/4, "Zy": (h * b**2)/4
+            "A": A, "Xc": Xc, "Yc": Yc, 
+            "Ixx": Ixx, "Iyy": Iyy, "Ixy": Ixy,
+            "y_top": h_dim/2 - Yc, "y_bottom": h_dim/2 + Yc, 
+            "x_left": b_dim/2 + Xc, "x_right": b_dim/2 - Xc,
+            "J": J_val, "Cw": 0, 
+            "Zx": (b_dim * h_dim**2)/4, 
+            "Zy": (h_dim * b_dim**2)/4
         })
 
-    def _calculate_i_beam(self):
+    def _calculate_i_beam_integration(self):
         d = self.input_dims_converted_to_base.get("d")      
         bf = self.input_dims_converted_to_base.get("bf")    
         tf = self.input_dims_converted_to_base.get("tf")    
         tw = self.input_dims_converted_to_base.get("tw")    
-        if None in [d, bf, tf, tw]: raise ValueError("d, bf, tf, tw must be provided.")
-        if d <=0 or bf <=0 or tf <=0 or tw <=0: raise ValueError("Dimensions must be positive.")
+        
+        if None in [d, bf, tf, tw]: raise ValueError("d, bf, tf, tw must be provided for I-Beam.")
+        if d <=0 or bf <=0 or tf <=0 or tw <=0: raise ValueError("I-Beam dimensions must be positive.")
         hw = d - 2 * tf 
-        if hw <= 0 : raise ValueError("Web height (d - 2*tf) must be positive.")
-        area_flange, area_web = bf * tf, hw * tw
-        Ixx_flanges = 2 * ((bf * tf**3 / 12) + area_flange * ((d - tf) / 2)**2)
-        Iyy_flanges = 2 * (tf * bf**3 / 12)
-        Iyy_val = Iyy_flanges + (hw * tw**3)/12
+        if hw <= 0 : raise ValueError("Web height (d - 2*tf) must be positive for I-Beam.")
+
+        A_web, Qx_web_o, Qy_web_o, Ixx_o_web, Iyy_o_web, Ixy_o_web = \
+            self._integrate_rectangle_part(tw, hw, -tw/2, -hw/2)
+        A_tf, Qx_tf_o, Qy_tf_o, Ixx_o_tf, Iyy_o_tf, Ixy_o_tf = \
+            self._integrate_rectangle_part(bf, tf, -bf/2, hw/2)
+        A_bf, Qx_bf_o, Qy_bf_o, Ixx_o_bf, Iyy_o_bf, Ixy_o_bf = \
+            self._integrate_rectangle_part(bf, tf, -bf/2, -d/2)
+
+        A_total = A_web + A_tf + A_bf
+        Qx_total_o = Qx_web_o + Qx_tf_o + Qx_bf_o
+        Qy_total_o = Qy_web_o + Qy_tf_o + Qy_bf_o
+        Ixx_total_o = Ixx_o_web + Ixx_o_tf + Ixx_o_bf
+        Iyy_total_o = Iyy_o_web + Iyy_o_tf + Iyy_o_bf
+        Ixy_total_o = Ixy_o_web + Ixy_o_tf + Ixy_o_bf
+        
+        Xc_total = Qy_total_o / A_total if A_total > 1e-9 else 0 # Should be 0
+        Yc_total = Qx_total_o / A_total if A_total > 1e-9 else 0 # Should be 0
+        
+        Ixx_total_c = Ixx_total_o - A_total * Yc_total**2
+        Iyy_total_c = Iyy_total_o - A_total * Xc_total**2
+        Ixy_total_c = Ixy_total_o - A_total * Xc_total * Yc_total
+
+        J_val = (1/3) * (2 * bf * tf**3 + hw * tw**3) # Standard St. Venant approximation for open sections
+        
+        # More accurate Cw formula for doubly symmetric I-sections:
+        # Cw = (I_y_flange * h_0^2) / 2
+        # where I_y_flange = (tf * bf^3) / 12 (for one flange)
+        # and h_0 = d - tf (distance between flange centroids)
+        I_y_flange = (tf * bf**3) / 12
+        h_0 = d - tf
+        Cw_val = (I_y_flange * h_0**2) / 2
+        
+        Zx_val = (bf * tf * (d - tf)) + (tw * hw**2 / 4)
+        Zy_val = (tf * bf**2 / 2) + (hw * tw**2 / 4)
+
         self.properties.update({
-            "A": 2 * area_flange + area_web, "Xc": 0, "Yc": 0,
-            "Ixx": Ixx_flanges + (tw * hw**3)/12, "Iyy": Iyy_val, "Ixy": 0,
-            "y_top": d/2, "y_bottom": d/2, "x_left": bf/2, "x_right": bf/2,
-            "J": (1/3) * (2 * bf * tf**3 + hw * tw**3),
-            "Cw": Iyy_val * ((d - tf)**2) / 4 if Iyy_val else 0,
-            "Zx": (bf * tf * (d - tf)) + (tw * hw**2 / 4),
-            "Zy": (tf * bf**2 / 2) + (hw * tw**2 / 4)
+            "A": A_total, "Xc": Xc_total, "Yc": Yc_total,
+            "Ixx": Ixx_total_c, "Iyy": Iyy_total_c, "Ixy": Ixy_total_c,
+            "y_top": d/2 - Yc_total, "y_bottom": d/2 + Yc_total,
+            "x_left": bf/2 + Xc_total, "x_right": bf/2 - Xc_total,
+            "J": J_val, "Cw": Cw_val, "Zx": Zx_val, "Zy": Zy_val
         })
 
-    def _calculate_solid_circle(self):
-        D = self.input_dims_converted_to_base.get("D")
-        if D is None or D <= 0: raise ValueError("Diameter (D) must be positive.")
-        A = PI * D**2 / 4
-        Ixx = PI * D**4 / 64
-        Iyy = Ixx
-        J = PI * D**4 / 32
-        Zx = D**3 / 6
+    def _calculate_solid_circle_integration(self):
+        D_dim = self.input_dims_converted_to_base.get("D")
+        if D_dim is None or D_dim <= 0: raise ValueError("Diameter (D) must be positive.")
+        R_dim = D_dim / 2
+
+        A, Qx_o, Qy_o, Ixx_o, Iyy_o, Ixy_o, J_val = \
+            self._integrate_solid_circular_part(R_dim)
+        
+        Xc = Qy_o / A if A > 1e-9 else 0 # Should be 0
+        Yc = Qx_o / A if A > 1e-9 else 0 # Should be 0
+
+        Ixx = Ixx_o - A * Yc**2
+        Iyy = Iyy_o - A * Xc**2
+        Ixy = Ixy_o - A * Xc * Yc # Should be 0
+
+        Zx = D_dim**3 / 6
         Zy = Zx
+
         self.properties.update({
-            "A": A, "Xc": 0, "Yc": 0, "Ixx": Ixx, "Iyy": Iyy, "Ixy": 0,
-            "y_top": D/2, "y_bottom": D/2, "x_left": D/2, "x_right": D/2,
-            "J": J, "Cw": 0, "Zx": Zx, "Zy": Zy
+            "A": A, "Xc": Xc, "Yc": Yc, 
+            "Ixx": Ixx, "Iyy": Iyy, "Ixy": Ixy,
+            "y_top": R_dim - Yc, "y_bottom": R_dim + Yc, 
+            "x_left": R_dim + Xc, "x_right": R_dim - Xc,
+            "J": J_val, "Cw": 0, "Zx": Zx, "Zy": Zy
         })
 
-    def _calculate_channel(self):
-        d = self.input_dims_converted_to_base.get("d")
-        bf = self.input_dims_converted_to_base.get("bf") # Overall flange width
-        tf = self.input_dims_converted_to_base.get("tf")
-        tw = self.input_dims_converted_to_base.get("tw")
-        if None in [d, bf, tf, tw] or d <= 0 or bf <= 0 or tf <= 0 or tw <= 0:
-            raise ValueError("d, bf, tf, tw must be positive.")
-        if bf <= tw: raise ValueError("Flange width (bf) must be greater than web thickness (tw).")
-        if d <= 2*tf: raise ValueError("Overall depth (d) must be greater than twice flange thickness (2*tf).")
+    def _calculate_channel_integration(self):
+        d_dim = self.input_dims_converted_to_base.get("d")      
+        bf_dim = self.input_dims_converted_to_base.get("bf")    
+        tf_dim = self.input_dims_converted_to_base.get("tf")    
+        tw_dim = self.input_dims_converted_to_base.get("tw")    
 
-        hw = d - 2*tf # web height clear
+        if None in [d_dim, bf_dim, tf_dim, tw_dim] or d_dim <= 0 or bf_dim <= 0 or tf_dim <= 0 or tw_dim <= 0:
+            raise ValueError("d, bf, tf, tw must be positive for Channel section.")
+        if bf_dim <= tw_dim: raise ValueError("Flange width (bf) must be greater than web thickness (tw) for Channel.")
+        if d_dim <= 2*tf_dim: raise ValueError("Overall depth (d) must be greater than twice flange thickness (2*tf) for Channel.")
+
+        hw_dim = d_dim - 2*tf_dim 
+
+        # Origin: Back of the web (x=0), at mid-height of the overall section d (y=0).
+        A_w, Qx_w_o, Qy_w_o, Ixx_o_w, Iyy_o_w, Ixy_o_w = \
+            self._integrate_rectangle_part(tw_dim, d_dim, 0, -d_dim/2) # Web is full depth d_dim
         
-        area_web = hw * tw
-        area_one_flange = bf * tf
-        A = area_web + 2 * area_one_flange
+        # Flanges are only on one side of the web for a channel.
+        # Top Flange part: width bf_dim, thickness tf_dim.
+        # Bottom-left corner relative to origin: (0, d_dim/2 - tf_dim)
+        A_tf, Qx_tf_o, Qy_tf_o, Ixx_o_tf, Iyy_o_tf, Ixy_o_tf = \
+            self._integrate_rectangle_part(bf_dim, tf_dim, 0, d_dim/2 - tf_dim)
 
-        # Centroid Xc from the back of the web
-        Xc = (area_web * (tw/2) + 2 * area_one_flange * (bf/2)) / A
-        Yc = 0 # Symmetric about x-axis
+        # Bottom Flange part:
+        # Bottom-left corner relative to origin: (0, -d_dim/2)
+        A_bf, Qx_bf_o, Qy_bf_o, Ixx_o_bf, Iyy_o_bf, Ixy_o_bf = \
+            self._integrate_rectangle_part(bf_dim, tf_dim, 0, -d_dim/2)
+            
+        A_total = A_w + A_tf + A_bf # This is incorrect for channel, overcounts web-flange intersection
+        # Correct decomposition for channel (origin at back of web, mid-depth)
+        # Web: tw x d. Origin for this part (0, -d/2)
+        A_w, Qx_w_o, Qy_w_o, Ixx_o_w, Iyy_o_w, Ixy_o_w = \
+            self._integrate_rectangle_part(tw_dim, d_dim, 0, -d_dim/2)
+        # Top Flange (projecting part): (bf_dim - tw_dim) x tf_dim. Origin (tw_dim, d_dim/2 - tf_dim)
+        A_tf, Qx_tf_o, Qy_tf_o, Ixx_o_tf, Iyy_o_tf, Ixy_o_tf = \
+            self._integrate_rectangle_part(bf_dim - tw_dim, tf_dim, tw_dim, d_dim/2 - tf_dim)
+        # Bottom Flange (projecting part): (bf_dim - tw_dim) x tf_dim. Origin (tw_dim, -d_dim/2)
+        A_bf, Qx_bf_o, Qy_bf_o, Ixx_o_bf, Iyy_o_bf, Ixy_o_bf = \
+            self._integrate_rectangle_part(bf_dim - tw_dim, tf_dim, tw_dim, -d_dim/2)
 
-        # Moment of inertia about centroidal axes
-        Ixx_web_local = (tw * hw**3) / 12
-        Ixx_flange_local = (bf * tf**3) / 12
-        Ixx = Ixx_web_local + 2 * (Ixx_flange_local + area_one_flange * ((d-tf)/2)**2)
+        A_total = A_w + A_tf + A_bf
+        Qx_total_o = Qx_w_o + Qx_tf_o + Qx_bf_o 
+        Qy_total_o = Qy_w_o + Qy_tf_o + Qy_bf_o 
+        Ixx_total_o = Ixx_o_w + Ixx_o_tf + Ixx_o_bf
+        Iyy_total_o = Iyy_o_w + Iyy_o_tf + Iyy_o_bf
+        Ixy_total_o = Ixy_o_w + Ixy_o_tf + Ixy_o_bf
+
+        Xc_o = Qy_total_o / A_total if A_total > 1e-9 else 0 
+        Yc_o = Qx_total_o / A_total if A_total > 1e-9 else 0 # Should be ~0
+
+        Ixx_c = Ixx_total_o - A_total * Yc_o**2
+        Iyy_c = Iyy_total_o - A_total * Xc_o**2
+        Ixy_c = Ixy_total_o - A_total * Xc_o * Yc_o
         
-        Iyy_web_local = (hw * tw**3) / 12
-        Iyy_flange_local = (tf * bf**3) / 12
-        Iyy = (Iyy_web_local + area_web * (Xc - tw/2)**2) + \
-              2 * (Iyy_flange_local + area_one_flange * (bf/2 - Xc)**2)
-
-        J = (1/3) * (hw * tw**3 + 2 * bf * tf**3) # Approximation
-
-        # Plastic section modulus (approximate for symmetric bending)
-        # PNA for Zx is at d/2.
-        Zx = bf*tf*(d-tf) + tw*hw**2/4
-        Zy = None # Complex for channel, not typically required for simple manual input
+        J_val = (1/3) * (hw_dim * tw_dim**3 + 2 * bf_dim * tf_dim**3) 
+        Cw_val = None 
+        Zx_val = bf_dim*tf_dim*(d_dim-tf_dim) + tw_dim*hw_dim**2/4 
+        Zy_val = None 
 
         self.properties.update({
-            "A": A, "Xc": Xc, "Yc": Yc, "Ixx": Ixx, "Iyy": Iyy, "Ixy": 0,
-            "y_top": d/2, "y_bottom": d/2, "x_left": Xc, "x_right": bf - Xc,
-            "J": J, "Cw": None, # Cw is complex for channels
-            "Zx": Zx, "Zy": Zy
-        })
-
-    def _calculate_angle(self):
-        L1 = self.input_dims_converted_to_base.get("L1")
-        L2 = self.input_dims_converted_to_base.get("L2")
-        t = self.input_dims_converted_to_base.get("t")
-        if None in [L1, L2, t] or L1 <= 0 or L2 <= 0 or t <= 0:
-            raise ValueError("L1, L2, t must be positive.")
-        if t > L1 or t > L2: raise ValueError("Thickness (t) cannot exceed leg lengths (L1, L2).")
-
-        A = (L1 + L2 - t) * t
-        # Centroid from outer corner (origin at intersection of outer faces of L1 and L2)
-        Xc_corner = (L1**2 * t + (L2 - t) * t**2) / (2 * A)
-        Yc_corner = (L2**2 * t + (L1 - t) * t**2) / (2 * A)
-        
-        # Properties about axes through centroid, parallel to legs
-        # Ix'x' (about axis through centroid parallel to L1)
-        Ixx_c = (t*L2**3)/3 + (L1-t)*t**3/3 - A*Yc_corner**2
-        # Iy'y' (about axis through centroid parallel to L2)
-        Iyy_c = (L2*t**3)/3 + (L1-t)*t**3/3 - A*Xc_corner**2 # Error in formula, should be L1^3 for Iyy
-        Iyy_c = (t*L1**3)/3 + (L2-t)*t**3/3 - A*Xc_corner**2
-
-
-        # Product of inertia Ixy_c about centroidal axes parallel to legs
-        # For simplicity, using a known formula for equal legs and adapting
-        # Ixy_c for L-section with origin at centroid, axes parallel to legs:
-        # Ixy_c = (+/-) t^2 * (L1-t) * (L2-t) / 4  -- sign depends on quadrant
-        # A more general approach is needed or use tabulated values for Ixy if available
-        # For manual input, Ixy calculation is complex.
-        # Let's calculate Ixy about corner axes first, then transfer.
-        # Ixy_o (about corner axes parallel to legs)
-        # For leg L1 along X, L2 along Y:
-        # Ixy_o = integral(xy dA) = integral_0^t integral_0^L1 (x*y dx dy) for L1 part
-        #         + integral_0^L2 integral_0^t (x*y dy dx) for L2 part (careful with limits)
-        # Simpler: Ixy_o = (L1*t * (L1/2) * (t/2)) + ((L2-t)*t * (t/2) * (t + (L2-t)/2))
-        Ixy_o = (L1*t * (L1/2) * (t/2)) + (t*(L2-t) * (t/2) * ( (L2-t)/2 + t) ) # This is not right
-        # From first principles, for origin at outer corner:
-        # Rectangle 1 (L1xt): centroid (L1/2, t/2), Area1 = L1*t
-        # Rectangle 2 ((L2-t)xt): centroid (t/2, t+(L2-t)/2), Area2 = (L2-t)*t
-        # Ixy_o = Ixy_c1 + A1*d1x*d1y + Ixy_c2 + A2*d2x*d2y. Ixy_c1, Ixy_c2 = 0 for rectangles.
-        # d1x = L1/2, d1y = t/2
-        # d2x = t/2, d2y = t + (L2-t)/2 = (L2+t)/2
-        Ixy_o = (L1*t * (L1/2) * (t/2)) + ((L2-t)*t * (t/2) * ((L2+t)/2) )
-        Ixy_c = Ixy_o - A * Xc_corner * Yc_corner
-
-
-        J = (1/3) * (L1*t**3 + (L2-t)*t**3) # Approximation for thin legs
-
-        self.properties.update({
-            "A": A, "Xc": Xc_corner, "Yc": Yc_corner, # These are distances from corner, not centroid of section itself
+            "A": A_total, "Xc": Xc_o, "Yc": Yc_o, 
             "Ixx": Ixx_c, "Iyy": Iyy_c, "Ixy": Ixy_c,
-            "y_top": L2 - Yc_corner, "y_bottom": Yc_corner, 
-            "x_left": Xc_corner, "x_right": L1 - Xc_corner,
-            "J": J, "Cw": None, "Zx": None, "Zy": None # Zx, Zy, Cw complex for angles
+            "y_top": d_dim/2 - Yc_o, "y_bottom": d_dim/2 + Yc_o,
+            "x_left": Xc_o, "x_right": bf_dim - Xc_o, 
+            "J": J_val, "Cw": Cw_val, "Zx": Zx_val, "Zy": Zy_val
         })
-        # Note: Xc, Yc here are from the outer corner. The _calculate_general_properties will use these
-        # and Ixx, Iyy, Ixy which are already about the centroid.
-        # We need to provide y_top, y_bottom etc. relative to the centroid for Sx, Sy.
-        # The current Ixx_c, Iyy_c, Ixy_c are about the centroid.
-        # So, y_top for Sx should be max distance from centroid to top fiber along Y.
-        # y_top = L2 - Yc_corner; y_bottom = Yc_corner (distances from centroid to extreme fibers)
-        # x_left = Xc_corner; x_right = L1 - Xc_corner (distances from centroid to extreme fibers)
-        # This needs careful handling of centroid location vs extreme fiber distances.
-        # For now, the Xc, Yc stored are from corner. General props will calculate principal axes.
 
-    def _calculate_tee(self):
-        d = self.input_dims_converted_to_base.get("d")      # Overall depth
-        bf = self.input_dims_converted_to_base.get("bf")    # Flange width
-        tf = self.input_dims_converted_to_base.get("tf")    # Flange thickness
-        ts = self.input_dims_converted_to_base.get("ts")    # Stem thickness
-        if None in [d, bf, tf, ts] or d <= 0 or bf <= 0 or tf <= 0 or ts <= 0:
-            raise ValueError("d, bf, tf, ts must be positive.")
-        if tf >= d : raise ValueError("Flange thickness (tf) must be less than overall depth (d).")
-        if ts > bf : raise ValueError("Stem thickness (ts) must not exceed flange width (bf).")
-
-        area_flange = bf * tf
-        hs = d - tf # stem height
-        area_stem = hs * ts
-        A = area_flange + area_stem
-
-        # Yc from bottom of stem
-        Yc = (area_stem * (hs/2) + area_flange * (hs + tf/2)) / A
-        Xc = 0 # Symmetric about y-axis
-
-        # Moment of inertia about centroidal axes
-        Ixx_flange_local = (bf * tf**3) / 12
-        Ixx_stem_local = (ts * hs**3) / 12
-        Ixx = (Ixx_flange_local + area_flange * (hs + tf/2 - Yc)**2) + \
-              (Ixx_stem_local + area_stem * (hs/2 - Yc)**2)
+    def _calculate_angle_integration(self):
+        L1 = self.input_dims_converted_to_base.get("L1") 
+        L2 = self.input_dims_converted_to_base.get("L2") 
+        t = self.input_dims_converted_to_base.get("t")   
         
-        Iyy = (tf * bf**3) / 12 + (hs * ts**3) / 12
+        if None in [L1, L2, t] or L1 <= 0 or L2 <= 0 or t <= 0:
+            raise ValueError("L1, L2, t must be positive for Angle section.")
+        if t > L1 or t > L2: 
+            raise ValueError("Thickness (t) cannot exceed leg lengths (L1, L2) for Angle section.")
+
+        A1, Qx1_o, Qy1_o, Ixx1_o, Iyy1_o, Ixy1_o = \
+            self._integrate_rectangle_part(L1, t, 0, 0)
+        A2, Qx2_o, Qy2_o, Ixx2_o, Iyy2_o, Ixy2_o = \
+            self._integrate_rectangle_part(t, L2 - t, 0, t)
+            
+        A_total = A1 + A2
+        Qx_total_o = Qx1_o + Qx2_o
+        Qy_total_o = Qy1_o + Qy2_o
+        Ixx_total_o = Ixx1_o + Ixx2_o
+        Iyy_total_o = Iyy1_o + Iyy2_o
+        Ixy_total_o = Ixy1_o + Ixy2_o
         
-        J = (1/3) * (bf * tf**3 + hs * ts**3) # Approximation
+        Xc_o = Qy_total_o / A_total if A_total > 1e-9 else 0
+        Yc_o = Qx_total_o / A_total if A_total > 1e-9 else 0
         
+        Ixx_c = Ixx_total_o - A_total * Yc_o**2
+        Iyy_c = Iyy_total_o - A_total * Xc_o**2
+        Ixy_c = Ixy_total_o - A_total * Xc_o * Yc_o
+
+        J_val = (1/3) * (L1 * t**3 + (L2-t) * t**3) 
+        Cw_val = None 
+        Zx_val = None 
+        Zy_val = None 
+
         self.properties.update({
-            "A": A, "Xc": Xc, "Yc": Yc, # Yc is from bottom of stem
-            "Ixx": Ixx, "Iyy": Iyy, "Ixy": 0,
-            "y_top": d - Yc, "y_bottom": Yc, 
-            "x_left": bf/2, "x_right": bf/2,
-            "J": J, "Cw": 0, # Cw approx 0 for symmetric tee
-            "Zx": None, "Zy": None # Zx, Zy complex for Tee PNA
+            "A": A_total, "Xc": Xc_o, "Yc": Yc_o, 
+            "Ixx": Ixx_c, "Iyy": Iyy_c, "Ixy": Ixy_c,
+            "y_top": L2 - Yc_o, "y_bottom": Yc_o, 
+            "x_left": Xc_o, "x_right": L1 - Xc_o, 
+            "J": J_val, "Cw": Cw_val, "Zx": Zx_val, "Zy": Zy_val
         })
-        # Note: Yc is from bottom. y_top/y_bottom are distances from centroid.
 
-    def _calculate_hss_rectangular(self):
-        H = self.input_dims_converted_to_base.get("H") # Overall Height
-        B = self.input_dims_converted_to_base.get("B") # Overall Width
+    def _calculate_tee_integration(self):
+        d_dim = self.input_dims_converted_to_base.get("d")      
+        bf_dim = self.input_dims_converted_to_base.get("bf")    
+        tf_dim = self.input_dims_converted_to_base.get("tf")    
+        ts_dim = self.input_dims_converted_to_base.get("ts")    
+        
+        if None in [d_dim, bf_dim, tf_dim, ts_dim] or d_dim <= 0 or bf_dim <= 0 or tf_dim <= 0 or ts_dim <= 0:
+            raise ValueError("d, bf, tf, ts must be positive for Tee section.")
+        if tf_dim >= d_dim : raise ValueError("Flange thickness (tf) must be less than overall depth (d) for Tee.")
+        if ts_dim > bf_dim : raise ValueError("Stem thickness (ts) must not exceed flange width (bf) for Tee.")
+
+        hs_dim = d_dim - tf_dim # stem height
+
+        # Origin: Centerline of stem (x=0), at the bottom of the stem (y=0)
+        # Stem part:
+        # Bottom-left corner: (-ts_dim/2, 0)
+        A_s, Qx_s_o, Qy_s_o, Ixx_o_s, Iyy_o_s, Ixy_o_s = \
+            self._integrate_rectangle_part(ts_dim, hs_dim, -ts_dim/2, 0)
+
+        # Flange part:
+        # Bottom-left corner: (-bf_dim/2, hs_dim)
+        A_f, Qx_f_o, Qy_f_o, Ixx_o_f, Iyy_o_f, Ixy_o_f = \
+            self._integrate_rectangle_part(bf_dim, tf_dim, -bf_dim/2, hs_dim)
+            
+        A_total = A_s + A_f
+        Qx_total_o = Qx_s_o + Qx_f_o # This is sum of y*dA, will give Yc_o * A_total
+        Qy_total_o = Qy_s_o + Qy_f_o # This is sum of x*dA, should be 0
+        Ixx_total_o = Ixx_o_s + Ixx_o_f
+        Iyy_total_o = Iyy_o_s + Iyy_o_f
+        Ixy_total_o = Ixy_o_s + Ixy_o_f # Should be 0
+
+        Xc_o = Qy_total_o / A_total if A_total > 1e-9 else 0 # Should be 0
+        Yc_o = Qx_total_o / A_total if A_total > 1e-9 else 0 # This is Yc from bottom of stem
+
+        Ixx_c = Ixx_total_o - A_total * Yc_o**2
+        Iyy_c = Iyy_total_o - A_total * Xc_o**2
+        Ixy_c = Ixy_total_o - A_total * Xc_o * Yc_o # Should be 0
+        
+        J_val = (1/3) * (bf_dim * tf_dim**3 + hs_dim * ts_dim**3) 
+        Cw_val = 0 
+        Zx_val = None 
+        Zy_val = None
+
+        self.properties.update({
+            "A": A_total, "Xc": Xc_o, "Yc": Yc_o, # Xc_o is 0, Yc_o is from bottom of stem
+            "Ixx": Ixx_c, "Iyy": Iyy_c, "Ixy": Ixy_c,
+            "y_top": d_dim - Yc_o, "y_bottom": Yc_o,
+            "x_left": bf_dim/2, "x_right": bf_dim/2,
+            "J": J_val, "Cw": Cw_val, "Zx": Zx_val, "Zy": Zy_val
+        })
+
+    def _calculate_hss_rectangular_integration(self):
+        H_outer = self.input_dims_converted_to_base.get("H") 
+        B_outer = self.input_dims_converted_to_base.get("B") 
         t = self.input_dims_converted_to_base.get("t")
-        if None in [H, B, t] or H <= 0 or B <= 0 or t <= 0:
-            raise ValueError("H, B, t must be positive.")
-        if 2*t >= H or 2*t >= B: raise ValueError("Thickness (2*t) must be less than H and B.")
-
-        A = B*H - (B - 2*t)*(H - 2*t)
-        Ixx = (B*H**3 - (B - 2*t)*(H - 2*t)**3) / 12
-        Iyy = (H*B**3 - (H - 2*t)*(B - 2*t)**3) / 12
         
-        # J approx for thin-walled closed sections (Bredt's)
-        Am = (B-t)*(H-t) # Mean enclosed area
-        pm = 2*((B-t) + (H-t)) # Mean perimeter
-        J = (4 * Am**2 * t) / pm if pm > 0 else 0 # Simplified Bredt's
-        # More accurate J for SHS/RHS often uses specific formulas or tables.
-        # For now, using a common approximation: J = t*(H-t)*(B-t)*(H-t+B-t) / ((H-t)+(B-t)) * 2 -- No
-        # J = ( (H-t)**3 * (B-t) + (B-t)**3 * (H-t) + t**4 * (H-t+B-t)/2 ) * t / 3 -- No
-        # Using sum of (1/3)bt^3 for components is not good for closed sections.
-        # Let's use a simpler sum of components for now, acknowledging it's a rough approx for J.
-        # J_approx = (1/3) * (2*B*t**3 + 2*(H-2*t)*t**3)
-        # A better approx for thin tubes: J = 2*t*(B-t)*(H-t)
-        # Using the formula from AISC Design Guide 9 (approx, ignoring corner radii):
-        # J = t * (B-t)**3 / 3 + t * (H-t)**3 / 3 + (B-t) * (H-t) * t * (B-t + H-t) / 3 -- No
-        # J = (t * (B-t)**3 + t * (H-2*t)**3 + (B-2*t)*t**3 * 2 ) / 3 -- No
-        # Let's use the one from provided SHS CSV data if possible, or a known approx.
-        # For manual, we need a formula. J from AISC DG9: J = 2*t*(B-t)*(H-t) - 4.5*(4-PI)*t^3 (approx)
-        # For simplicity and consistency with some texts: J = (2*t*(B-t)*(H-t)**2 + 2*t*(H-t)*(B-t)**2) / ((B-t)+(H-t)) -- No
-        # Let's use the formula for J from the provided CSV for SHS if it's consistent or a simple one.
-        # The CSV has J values. For manual calculation, a common approx:
-        J = 2 * t * (B-t) * (H-t) # Area enclosed by centerline * 2t (approx)
+        if None in [H_outer, B_outer, t] or H_outer <= 0 or B_outer <= 0 or t <= 0:
+            raise ValueError("H, B, t must be positive for HSS Rectangular.")
+        if 2*t >= H_outer or 2*t >= B_outer: 
+            raise ValueError("Thickness (2*t) must be less than H and B for HSS Rectangular.")
 
-        Zx = B*H**2/4 - (B-2*t)*(H-2*t)**2/4
-        Zy = H*B**2/4 - (H-2*t)*(B-2*t)**2/4
+        A_outer, Qx_outer_o, Qy_outer_o, Ixx_outer_o, Iyy_outer_o, Ixy_outer_o = \
+            self._integrate_rectangle_part(B_outer, H_outer, -B_outer/2, -H_outer/2)
+
+        B_inner = B_outer - 2*t
+        H_inner = H_outer - 2*t
+        
+        A_inner, Qx_inner_o, Qy_inner_o, Ixx_inner_o, Iyy_inner_o, Ixy_inner_o = (0,0,0,0,0,0)
+        if B_inner > 1e-9 and H_inner > 1e-9: 
+            A_inner, Qx_inner_o, Qy_inner_o, Ixx_inner_o, Iyy_inner_o, Ixy_inner_o = \
+                self._integrate_rectangle_part(B_inner, H_inner, -B_inner/2, -H_inner/2)
+
+        A_net = A_outer - A_inner
+        Qx_net_o = Qx_outer_o - Qx_inner_o 
+        Qy_net_o = Qy_outer_o - Qy_inner_o 
+        Ixx_net_o = Ixx_outer_o - Ixx_inner_o
+        Iyy_net_o = Iyy_outer_o - Iyy_inner_o
+        Ixy_net_o = Ixy_outer_o - Ixy_inner_o 
+        
+        Xc_net = Qy_net_o / A_net if A_net > 1e-9 else 0 # Should be 0
+        Yc_net = Qx_net_o / A_net if A_net > 1e-9 else 0 # Should be 0
+        
+        Ixx_c = Ixx_net_o - A_net * Yc_net**2
+        Iyy_c = Iyy_net_o - A_net * Xc_net**2
+        Ixy_c = Ixy_net_o - A_net * Xc_net * Yc_net
+
+        Am = (B_outer-t)*(H_outer-t) 
+        pm = 2*((B_outer-t) + (H_outer-t)) 
+        J_val = (4 * Am**2 * t) / pm if pm > 1e-9 else 0
+        Cw_val = 0
+        
+        Zx_val = B_outer*H_outer**2/4 - (B_inner)*(H_inner)**2/4
+        Zy_val = H_outer*B_outer**2/4 - (H_inner)*(B_inner)**2/4
 
         self.properties.update({
-            "A": A, "Xc": 0, "Yc": 0, "Ixx": Ixx, "Iyy": Iyy, "Ixy": 0,
-            "y_top": H/2, "y_bottom": H/2, "x_left": B/2, "x_right": B/2,
-            "J": J, "Cw": 0, "Zx": Zx, "Zy": Zy
+            "A": A_net, "Xc": Xc_net, "Yc": Yc_net,
+            "Ixx": Ixx_c, "Iyy": Iyy_c, "Ixy": Ixy_c,
+            "y_top": H_outer/2 - Yc_net, "y_bottom": H_outer/2 + Yc_net, 
+            "x_left": B_outer/2 + Xc_net, "x_right": B_outer/2 - Xc_net,
+            "J": J_val, "Cw": Cw_val, "Zx": Zx_val, "Zy": Zy_val
         })
 
-    def _calculate_hss_circular(self):
+    def _calculate_hss_circular_integration(self):
         OD = self.input_dims_converted_to_base.get("OD")
         t = self.input_dims_converted_to_base.get("t")
         if None in [OD, t] or OD <= 0 or t <= 0:
-            raise ValueError("OD and t must be positive.")
-        if 2*t >= OD: raise ValueError("Thickness (2*t) must be less than Outer Diameter (OD).")
+            raise ValueError("OD and t must be positive for HSS Circular.")
+        if 2*t >= OD: raise ValueError("Thickness (2*t) must be less than Outer Diameter (OD) for HSS Circular.")
 
-        ID = OD - 2*t
-        A = PI/4 * (OD**2 - ID**2)
-        Ixx = PI/64 * (OD**4 - ID**4)
-        Iyy = Ixx
-        J = PI/32 * (OD**4 - ID**4)
-        Zx = (OD**3 - ID**3) / 6
-        Zy = Zx
+        R_outer = OD / 2
+        ID_val = OD - 2*t # Renamed to avoid conflict with global ID
+        R_inner = ID_val / 2
+
+        A_outer, Qx_outer_o, Qy_outer_o, Ixx_o_outer, Iyy_o_outer, Ixy_o_outer, J_outer = \
+            self._integrate_solid_circular_part(R_outer)
+        A_inner, Qx_inner_o, Qy_inner_o, Ixx_o_inner, Iyy_o_inner, Ixy_o_inner, J_inner = \
+            self._integrate_solid_circular_part(R_inner)
+            
+        A_net = A_outer - A_inner
+        Qx_net_o = Qx_outer_o - Qx_inner_o 
+        Qy_net_o = Qy_outer_o - Qy_inner_o 
+        Ixx_net_o = Ixx_o_outer - Ixx_o_inner
+        Iyy_net_o = Iyy_o_outer - Iyy_o_inner
+        Ixy_net_o = Ixy_o_outer - Ixy_o_inner 
+        J_net = J_outer - J_inner
+        
+        Xc_net = Qy_net_o / A_net if A_net > 1e-9 else 0 # Should be 0
+        Yc_net = Qx_net_o / A_net if A_net > 1e-9 else 0 # Should be 0
+        
+        Ixx_c = Ixx_net_o - A_net * Yc_net**2
+        Iyy_c = Iyy_net_o - A_net * Xc_net**2
+        Ixy_c = Ixy_net_o - A_net * Xc_net * Yc_net # Should be 0
+
+        Zx_val = (OD**3 - ID_val**3) / 6
+        Zy_val = Zx_val
 
         self.properties.update({
-            "A": A, "Xc": 0, "Yc": 0, "Ixx": Ixx, "Iyy": Iyy, "Ixy": 0,
-            "y_top": OD/2, "y_bottom": OD/2, "x_left": OD/2, "x_right": OD/2,
-            "J": J, "Cw": 0, "Zx": Zx, "Zy": Zy
+            "A": A_net, "Xc": Xc_net, "Yc": Yc_net,
+            "Ixx": Ixx_c, "Iyy": Iyy_c, "Ixy": Ixy_c,
+            "y_top": OD/2 - Yc_net, "y_bottom": OD/2 + Yc_net, 
+            "x_left": OD/2 + Xc_net, "x_right": OD/2 - Xc_net,
+            "J": J_net, "Cw": 0, 
+            "Zx": Zx_val, "Zy": Zy_val
         })
 
     def calculate_properties(self):
