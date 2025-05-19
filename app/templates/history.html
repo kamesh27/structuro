@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Calculation History - {{ super() }}{% endblock %}
+
+{% block head_extra %}
+<style>
+    .history-entry {
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    .history-entry h5 {
+        margin-top: 0;
+        color: #337ab7;
+    }
+    .history-summary {
+        margin-bottom: 10px;
+    }
+    .history-details {
+        display: none; /* Hidden by default */
+        border-top: 1px dashed #ccc;
+        margin-top: 10px;
+        padding-top: 10px;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 4px;
+    }
+    .history-details pre {
+        background-color: #eee;
+        padding: 10px;
+        border-radius: 4px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .btn-toggle-details {
+        margin-right: 10px;
+    }
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+    .pagination a {
+        margin: 0 5px;
+        padding: 8px 12px;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        color: #337ab7;
+        border-radius: 4px;
+    }
+    .pagination a.active {
+        background-color: #337ab7;
+        color: white;
+        border-color: #337ab7;
+    }
+    .pagination span.disabled {
+        margin: 0 5px;
+        padding: 8px 12px;
+        color: #aaa;
+        border: 1px solid #eee;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Calculation History</h2>
+
+    {% if history_entries %}
+        {% for entry in history_entries %}
+        <div class="history-entry" id="entry-{{ entry.id }}">
+            <h5>Calculation on: {{ entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') }} UTC</h5>
+            
+            {% set input_params = entry.input_parameters | fromjson %}
+            {% set results_data = entry.results | fromjson %}
+
+            <div class="history-summary">
+                <p><strong>Input Summary:</strong> 
+                    Unit System: {{ input_params.unit_system }}, 
+                    Section Type: {{ input_params.section_type }}
+                    {% if input_params.inputs.method == 'Library' %}
+                        (Library: {{ input_params.inputs.standard_code }} - {{ input_params.inputs.shape_type }} - {{ input_params.inputs.designation }})
+                    {% elif input_params.inputs.method == 'Manual' %}
+                        (Manual: {{ input_params.inputs.shape_type }})
+                    {% endif %}
+                </p>
+                <p><strong>Key Results:</strong>
+                    {% if results_data.A %}Area (A): {{ "%.3f" | format(results_data.A.value) }} {{ results_data.A.unit }}{% endif %}
+                    {% if results_data.Ixx %}Ixx: {{ "%.3f" | format(results_data.Ixx.value) }} {{ results_data.Ixx.unit }}{% endif %}
+                    {% if results_data.Iyy %}Iyy: {{ "%.3f" | format(results_data.Iyy.value) }} {{ results_data.Iyy.unit }}{% endif %}
+                </p>
+            </div>
+
+            <button class="btn btn-sm btn-info btn-toggle-details" onclick="toggleDetails('details-{{ entry.id }}')">Toggle Details</button>
+            <a href="{{ url_for('main.export_history_entry_route', history_id=entry.id) }}" class="btn btn-sm btn-success">Download Excel</a>
+
+            <div class="history-details" id="details-{{ entry.id }}">
+                <h6>Full Input Parameters:</h6>
+                <pre>{{ input_params | tojson(indent=2) }}</pre>
+                <h6>Full Results:</h6>
+                <pre>{{ results_data | tojson(indent=2) }}</pre>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if pagination and pagination.pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Page Link -->
+                {% if pagination.has_prev %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('main.history_route', page=pagination.prev_num) }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                <!-- Page Numbers -->
+                {% for page_num in pagination.iter_pages() %}
+                    {% if page_num %}
+                        {% if pagination.page == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('main.history_route', page=page_num) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Next Page Link -->
+                {% if pagination.has_next %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('main.history_route', page=pagination.next_num) }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+    {% else %}
+        <p>You have no calculation history yet.</p>
+    {% endif %}
+</div>
+
+<script>
+    function toggleDetails(detailsId) {
+        var detailsDiv = document.getElementById(detailsId);
+        if (detailsDiv.style.display === "none" || detailsDiv.style.display === "") {
+            detailsDiv.style.display = "block";
+        } else {
+            detailsDiv.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}

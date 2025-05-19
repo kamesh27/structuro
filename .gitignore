@@ -17,6 +17,7 @@
 # Exclude locally installed dependencies
 venv/
 __pycache__/
+instance/
 
 # Exclude local IDE settings
 .idea/

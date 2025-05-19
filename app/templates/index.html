@@ -292,7 +292,7 @@
             return;
         }
         try {
-            const response = await fetch("{{ url_for('get_library_data_route') }}"); // Use url_for
+            const response = await fetch("{{ url_for('main.get_library_data_route') }}"); // Adjusted for blueprint
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const libraryData = await response.json();
             sectionLibraryCache = libraryData;
@@ -363,7 +363,7 @@
         }
         
         try {
-            const response = await fetch("{{ url_for('calculate_route') }}", { // Use url_for
+            const response = await fetch("{{ url_for('main.calculate_route') }}", { // Adjusted for blueprint
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -426,7 +426,7 @@
         }
 
         try {
-            const response = await fetch("{{ url_for('export_excel_route') }}", { // Use url_for
+            const response = await fetch("{{ url_for('main.export_excel_route') }}", { // Adjusted for blueprint
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
